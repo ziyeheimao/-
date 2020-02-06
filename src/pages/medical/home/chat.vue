@@ -15,7 +15,7 @@
 
     <div class="b"></div>
     <div class="b2">
-      <van-field v-model="sms" center clearable label="回复">
+      <van-field center clearable label="回复">
         <van-icon class="icon" name="smile-o" slot="button"/>
         <van-icon class="icon" name="add-o" slot="button"/>
       </van-field>
@@ -29,7 +29,6 @@ export default {
   components: {},
   data () {
     return {
-      sms: '',
       chars: [
         {date: '2020-01-01 16:00:23', info: '得了灰指甲~一个传染力俩~问我咋么办!? 马上用亮甲 O(∩_∩)O得了灰指甲~一个传染力俩~问我咋么办!? 马上用亮甲 O(∩_∩)O得了灰指甲~一个传染力俩~问我咋么办!? 马上用亮甲 O(∩_∩)O得了灰指甲~一个传染力俩~问我咋么办!? 马上用亮甲 O(∩_∩)O', type: 0, imgUrl: 'http://img.ea3w.com/393/392461.jpg'},
         {date: '2020-01-01 16:00:23', info: '得了灰指甲~一个传染力俩~问我咋么办!? 马上用亮甲 O(∩_∩)O', type: 1, imgUrl: 'https://n.sinaimg.cn/sinacn17/530/w700h630/20181107/703a-hnprhzv9128002.jpg'},
@@ -38,16 +37,29 @@ export default {
         {date: '2020-01-01 16:00:23', info: '得了灰指甲~一个传染力俩~问我咋么办!? 马上用亮甲 O(∩_∩)O', type: 1, imgUrl: 'https://n.sinaimg.cn/sinacn17/530/w700h630/20181107/703a-hnprhzv9128002.jpg'},
         {date: '2020-01-01 16:00:23', info: '得了灰指甲~一个传染力俩~问我咋么办!? 马上用亮甲 O(∩_∩)O', type: 1, imgUrl: 'https://n.sinaimg.cn/sinacn17/530/w700h630/20181107/703a-hnprhzv9128002.jpg'},
         {date: '2020-01-01 16:00:23', info: '得了灰指甲~一个传染力俩~问我咋么办!? 马上用亮甲 O(∩_∩)O', type: 1, imgUrl: 'https://n.sinaimg.cn/sinacn17/530/w700h630/20181107/703a-hnprhzv9128002.jpg'},
-      ]
+      ],
+      form: {
+        doctorId: '',
+        limit: 10,
+        page: 1
+      }
     }
   },
   computed: {},
   methods: {
     quit () {
       this.$router.go(-1)
+    },
+    init () {
+      this.$api.medical.inquiryRecordUserDoctor(this.form.doctorId, this.form).then(res => {
+        console.log(res)
+      })
     }
   },
-  created () {},
+  created () {
+    this.form.doctorId = this.$route.query.id
+    this.init()
+  },
   mounted () {},
   watch: {}
 }

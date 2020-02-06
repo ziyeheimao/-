@@ -6,5 +6,8 @@ const medical = {
     HOTEL_HOME_DOCTOR:'/medical/home/doctor', // 医生
     HOTEL_HOME_DOCTORINFO:'/medical/home/doctorInfo', // 医生信息
     HOTEL_HOME_CONDITION:'/medical/home/condition', // 填写病情
+    HOTEL_HOME_PATIENTCONSULTATION:'/medical/home/patientConsultation', // 患者咨询 （医生视角
+
+    HOTEL_HOME_LOGIN:'/medical/home/login', // 登录 （测试
   }
   export default medical

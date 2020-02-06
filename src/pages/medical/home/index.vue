@@ -106,7 +106,15 @@ export default {
   updated () {},
   beforeDestroy () {},
   deactivated () {},
-  watch: {}
+  watch: {
+		tabbarActive () {
+			if (this.tabbarActive === 2) {
+				this.$router.push(`/medical/home/patientConsultation`)
+			} else if (this.tabsActive === 0) {
+				this.$router.push('/medical/home/login')
+			}
+		}
+	}
 }
 </script>
 

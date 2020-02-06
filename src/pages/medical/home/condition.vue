@@ -74,7 +74,8 @@ export default {
         touchPatient: '2', // 14天内是否接触患者
       },
 
-      gender: [] // 性别
+      gender: [], // 性别
+      interval: null
     }
   },
   computed: {},
@@ -88,7 +89,6 @@ export default {
       let req = { dictType: 'gender' } // 性别
       this.$api.medical.sysDictSelectItemsByDictType(req).then(res => {
         if (res.code === 0) {
-          console.log('性别', res)
           let arr = []
           for (let i of res.bean) { arr.push(i.dictItemName) }
           this.columns[0].values = arr
@@ -113,12 +113,18 @@ export default {
       }
       return true;
     },
+    findAttrVal (data, arr, attrName, targetAttrName) {
+      for (let i of arr) {
+        if (i[attrName] === data) {
+          return i[targetAttrName]
+        }
+      }
+    },
     submit () {
       let req = {
         age: Number(this.form.slect[1]), // 年龄
-        gender: this.form.slect[1], // 性别
+        gender: this.findAttrVal(this.form.slect[0], this.gender, 'dictItemName', 'dictType'), // 性别
         diseaseDesc: this.form.diseaseDesc, // 描述
-        attachment: '', // 附件
         doctorId: Number(this.form.doctorId), // 医生id
         touchPatient: this.form.touchPatient, // 14天内是否接触患者
       }
@@ -128,21 +134,55 @@ export default {
         return
       }
 
-      // 处理文件
-      if (this.form.fileList.length > 0) {
-        req.attachment  = 'xxx'
-      }
-      console.log(this.form, req)
+      this._file(req)
+    },
 
-      // this.$api.medical.inquiryRecordAdd(req).then(res => {
-      //   console.log(res)
-      // })
-    }
+    _file (req) {
+      return new Promise((resolve, reject) => {
+        // 处理文件
+        if (this.form.fileList.length > 0) {
+          let arr = []
+          for (let i of this.form.fileList) {this.updata(i.file, arr)}
+
+          this.interval = setInterval(() => {
+            if (arr.length === this.form.fileList.length) {
+              req.attachment = arr.toString()
+              clearInterval(this.interval)
+              this._submit(req)
+            }
+          }, 100)
+        } else {
+          this._submit(req)
+        }
+      })
+    },
+    _submit (req) {
+      this.$api.medical.inquiryRecordAdd(req).then(res => {
+        if (res.code === 0) {
+          Toast('添加成功')
+          req.id = req.doctorId
+          this.$router.push({path: '/medical/home/chat', query: req}) // 跳转聊天页面 环信
+        }
+      })
+    },
+
+    updata (file, arr) {
+      let data = new FormData()
+      data.append('file', file)
+      this.$api.medical.sysOssUpload(data).then(res => {
+        if (res.code === 0) {
+          arr.push(res.bean)
+        }
+      })
+    },
   },
   created () {
     this.init()
   },
   mounted () {},
+  beforeDestroy() {
+    clearInterval(this.interval)
+  },
   watch: {}
 }
 </script>

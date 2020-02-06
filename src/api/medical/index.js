@@ -38,22 +38,27 @@ const medical = {
   },
 
   // 问诊记录
-  inquiryRecordAdd (data) { // 新增问诊记录
+  inquiryRecordAdd (data) { // 新增问诊记录 *******************************************
     return post('/inquiry/record/add', data)
   },
   inquiryRecordDoctorList (data) { // 医生问诊记录列表
     return get('/inquiry/record/doctor/list', data)
   },
-  inquiryRecordUserDoctor (doctorId, data) { // 用户针对某个医生问诊记录列表
+  inquiryRecordUserDoctor (doctorId, data) { // 用户针对某个医生问诊记录列表 ??????????????????????
     return get(`/inquiry/record/user/doctor/${doctorId}`, data)
   },
-  inquiryRecordUserList (data) { // 用户问诊记录列表
+  inquiryRecordUserList (data) { // 用户问诊记录列表 *******************************************
     return get(`/inquiry/record/user/list`, data)
   },
 
   // 文件上传接口
-  sysOssUpload (file) { // formData 类型
+  sysOssUpload (file) { // formData 类型 *******************************************
     return post(`/sys/oss/upload`, file)
+  },
+
+  // 登录接口 仅供测试
+  userLogin (data) { // 通过验证码登录 *******************************************
+    return post(`/user/login`, data)
   }
 
 }

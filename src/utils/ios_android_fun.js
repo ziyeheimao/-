@@ -24,7 +24,6 @@ const gotoNativeLogin = () => {
         iOSFun(1);
     }
     if (isAndroid) {
-
         androidFun(1)
     }
 }

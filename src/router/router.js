@@ -100,6 +100,16 @@ export default [
         path: PATH.HOTEL_HOME_CONDITION,
         component: _import(PATH.HOTEL_HOME_CONDITION) // 填写病情
     },
+    {
+        path: PATH.HOTEL_HOME_PATIENTCONSULTATION,
+        component: _import(PATH.HOTEL_HOME_PATIENTCONSULTATION) // 患者咨询 （医生视角
+    },
+    {
+        path: PATH.HOTEL_HOME_LOGIN,
+        component: _import(PATH.HOTEL_HOME_LOGIN) // 登录
+    },
+
 
     
+    // Patient consultation
 ]

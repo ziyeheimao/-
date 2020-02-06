@@ -165,7 +165,7 @@ export default {
     },
     consultation (v) {
       console.log(v, '跳转填写病情')
-      this.$router.push('/medical/home/condition') // 填写病情
+      this.$router.push({path: '/medical/home/condition', query: {id: v.id}}) // 填写病情
     },
     // 充值搜索的默认参数
     reset () {

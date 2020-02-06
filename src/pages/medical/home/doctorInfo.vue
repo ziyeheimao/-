@@ -125,7 +125,6 @@ export default {
           }
           break
         case 2:
-          // this.$router.push('/medical/home/chat') // 咨询
           this.$router.push({path: '/medical/home/condition', query: {id: this.info.id}}) // 在线咨询
           break
       }

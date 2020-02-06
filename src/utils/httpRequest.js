@@ -130,7 +130,7 @@ export function get(url, params = {}) {
             };
         }
         catch (err) {
-            setCookie("token", "46be7fd3-4ffe-4b05-a5f8-2f147f935ecb");
+            // setCookie("token", "46be7fd3-4ffe-4b05-a5f8-2f147f935ecb");
             http.get(baseUrl + url, {
                 params: params
             })
@@ -182,7 +182,7 @@ export function post(url, data = {}) {
             };
         }
         catch (err) {
-            setCookie("token", "46be7fd3-4ffe-4b05-a5f8-2f147f935ecb");
+            // setCookie("token", "46be7fd3-4ffe-4b05-a5f8-2f147f935ecb");
             http.post(baseUrl + url, data)
                 .then(response => {
                     if (response.data.code == 1100) {
@@ -229,7 +229,7 @@ export function patch(url, data = {}) {
             };
         }
         catch (err) {
-            setCookie("token", "46be7fd3-4ffe-4b05-a5f8-2f147f935ecb");
+            // setCookie("token", "46be7fd3-4ffe-4b05-a5f8-2f147f935ecb");
             http.patch(baseUrl + url, data)
                 .then(response => {
                     if (response.data.code == 1100) {
@@ -276,7 +276,7 @@ export function put(url, data = {}) {
             };
         }
         catch (err) {
-            setCookie("token", "46be7fd3-4ffe-4b05-a5f8-2f147f935ecb");
+            // setCookie("token", "46be7fd3-4ffe-4b05-a5f8-2f147f935ecb");
             http.put(baseUrl + url, data)
                 .then(response => {
                     if (response.data.code == 1100) {
