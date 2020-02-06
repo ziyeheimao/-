@@ -1,0 +1,307 @@
+.box {
+  // height: 10000px;
+  position: relative;
+  .van-nav-bar__title {
+    overflow: initial
+  }
+
+  .tabs {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    height: 44px;
+
+    .tab {
+      font-size: 16px;
+      color: #000;
+      position: relative;
+      height: 100%;
+      padding-bottom: 15px;
+
+      &.line.act::after {
+        display: block;
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: -20%;
+        z-index: 1;
+        width: 140%;
+        height: 3px;
+        background-color: #4B9AED;
+        border-radius: 3px;
+      }
+
+      &.act {
+        font-weight: bold;
+      }
+
+    }
+  }
+
+  .banner {
+    width: 100%;
+    height: 172px;
+
+    .img {
+      width: 100%;
+      height: 172px;
+      object-fit: cover;
+    }
+
+    .custom-indicator {
+      position: absolute;
+      right: 5px;
+      bottom: 5px;
+      padding: 2px 11px;
+      border-radius: 10px;
+      color: #fff;
+      font-size: 12px;
+      background: rgba(0, 0, 0, 0.5)
+    }
+
+  }
+
+  .detail-base-info {
+    width: 100%;
+    padding-left: 12px;
+    border-bottom: 10px solid #F8F8F8;
+
+    .base-name {
+      width: 100%;
+      // height: 62px;
+      padding: 11px 12px 11px 0;
+      font-size: 16px;
+    }
+
+    .base-info {
+      width: 100%;
+      height: 49px;
+      line-height: 49px;
+      display: flex;
+      font-size: 14px;
+      border-top: 1px solid #eee;
+      padding-right: 16px;
+
+      &>:first-child {
+        flex: 1;
+        width: 0;
+      }
+
+      &>:last-child {
+        width: auto;
+      }
+
+      .score {
+        .num {
+          font-size: 20px;
+          font-weight: bold;
+        }
+
+        .unit {}
+      }
+
+      .comment {
+        color: #999;
+      }
+
+      .address {}
+
+      .logo {
+        color: #4B9AED;
+      }
+    }
+
+
+  }
+
+  .booking-ticket {
+    width: 100%;
+    padding-bottom: 17px;
+    border-bottom: 10px solid #F7F7F9;
+    line-height: 1;
+
+    .title {
+      font-size: 18px;
+      font-weight: bold;
+      padding: 16px 12px 0;
+    }
+
+    .content {
+      & /deep/ .van-tab--active {
+        color: #4B9AED;
+      }
+
+      & /deep/ .van-tabs__line {
+        background: #4B9AED;
+      }
+
+      & /deep/ .van-hairline--top-bottom::after,
+      & /deep/ .van-hairline-unset--top-bottom::after {
+        border: none;
+      }
+
+      & /deep/ .van-tabs__wrap {
+        border-bottom: 1px solid #eee;
+      }
+
+      .dd {
+        display: flex;
+        align-items: flex-end;
+        width: 100%;
+        padding: 13px 16px 0;
+        margin-bottom: 14px;
+
+        .name {
+          width: 0;
+          flex: 1;
+          font-size: 16px;
+        }
+
+        .van-icon-arrow-up {
+          font-size: 16px;
+          transition: all .3s ease;
+
+        }
+
+        &.act {
+          &+.tt {
+            height: 0;
+            overflow: hidden;
+          }
+
+          .van-icon-arrow-up {
+            transform: rotate(180deg);
+
+          }
+        }
+
+      }
+
+      .tt {
+        transition: all .3s ease;
+        padding: 0 12px;
+
+        .page {
+          width: 100%;
+          height: 116px;
+          display: flex;
+          background: #F4F8FB;
+          padding-top: 13px;
+          padding-left: 15px;
+          margin-bottom: 10px;
+          &:last-child{
+            margin-bottom: 0;
+          }
+
+          .left {
+            flex: 1;
+
+            .t-name {
+              font-size: 14px;
+              margin-bottom: 10px;
+            }
+
+            .t-desc {
+              font-size: 12px;
+              margin-bottom: 10px;
+            }
+
+            .t-labels {
+              margin-bottom: 10px;
+
+              .label {
+                display: inline-block;
+                font-size: 10px;
+                border: .5px solid #999;
+                color: #999;
+                padding: 3px;
+              }
+            }
+
+            .t-notice {
+              display: flex;
+              align-items: center;
+              span {
+                font-size: 12px;
+                color: #999;
+              }
+
+              i {
+                color: #999;
+              }
+            }
+          }
+
+          .right {
+            width: auto;
+            margin-right: 22px;
+
+            .r-top {
+              margin-top: 21px;
+              margin-bottom: 4px;
+            }
+
+            
+          }
+        }
+
+      }
+    }
+  }
+
+  .ticket-detail{
+    width: 100%;
+    .sticky.is_fixed{
+      width: 100%;
+      height: 44px;
+      background: #fff;
+      .sticky-fixed{
+        position: fixed;
+        top: 46px;
+        right: 0;
+        left: 0;
+        z-index: 99;
+        background: #fff;
+      }
+    }
+    .tabs{
+      height: 44px;
+      padding: 0 62px;
+      border-bottom: 1px solid #eee;
+      .tab{
+        line-height: 44px;
+        padding-bottom: 0;
+      }
+    }
+    
+    .page{
+      padding: 0 16px;
+      width: 100%;
+      border-bottom: 10px solid #f8f8f8;
+      &.tow{
+        .last{
+          line-height: 1;
+          margin: 30px 0 21px;
+          font-weight: 300;
+        }
+      }
+      .img{
+        width: 100%;
+        height: 180px;
+        margin-bottom: 15px;
+      }
+      .name{
+        width: 100%;
+        font-size: 14px;
+        height: 33px;
+        line-height: 33px;
+        font-weight: 600;
+      }
+      .text{
+        color: #666;
+        line-height: 20px;
+      }
+    }
+  }
+}

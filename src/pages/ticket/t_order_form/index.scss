@@ -1,0 +1,165 @@
+.box {
+  height: 100%;
+  background: #F4F4F4;
+
+  .round {
+    border-radius: 4px;
+  }
+
+  >.content {
+    width: 100%;
+    padding: 19px 16px 25px;
+
+    >div {
+      margin-bottom: 15px;
+    }
+
+    .ticket {
+      width: 100%;
+      background: #fff;
+
+      .item {
+        width: 100%;
+
+        .top {
+          display: flex;
+
+          .title {
+            flex: 1;
+            font-size: 18px;
+            margin-top: 14px;
+            margin-left: 14px;
+          }
+
+          .right {
+            width: 100px;
+            margin-top: 14px;
+
+            .price-box {
+              margin-bottom: 15px;
+
+              .num {
+                font-size: 20px;
+                font-weight: 500;
+              }
+            }
+
+            .cost-detail {
+              color: #9EC2E8;
+            }
+          }
+
+        }
+
+        .center {
+          width: 100%;
+          height: 45px;
+          display: flex;
+          padding-left: 11px;
+          align-items: center;
+          color: #999;
+
+          .time {
+            font-size: 13px;
+          }
+        }
+
+        .bottom {
+          border-top: 1px solid #e6e6e6;
+
+          .name {
+            color: #666;
+            font-size: 14px;
+          }
+        }
+      }
+
+    }
+
+    .user-info {
+      width: 100%;
+
+      .title {
+        width: 100%;
+        height: 44px;
+        padding: 0 13px;
+        font-size: 16px;
+        line-height: 44px;
+        font-weight: 700;
+      }
+    }
+
+    .accident-insurance {
+      .title {
+        width: 100%;
+        height: 44px;
+        padding: 0 13px;
+        font-size: 16px;
+        line-height: 44px;
+        font-weight: 700;
+      }
+
+      .content {
+        background: #fff;
+        padding: 20px 0 15px 13px;
+
+        .top {
+          display: flex;
+          align-items: baseline;
+          margin-bottom: 13px;
+
+          .name {
+            font-size: 14px;
+            margin-right: 35px;
+          }
+
+        }
+      }
+    }
+  }
+
+
+  .footer {
+    .van-submit-bar__bar {
+      height: 60px;
+      padding-left: 16px;
+      padding-right: 15px;
+    }
+
+    .van-submit-bar__text {
+      text-align: left;
+      padding-right: 60px;
+    }
+
+    .van-button {
+      width: 114px;
+      height: 44px;
+      line-height: 44px;
+      border-radius: 999px;
+      background: #4B9AED;
+      border: none;
+
+    }
+
+    .van-submit-bar__price {
+      font-size: 22px;
+    }
+
+    .cost-detail {
+      position: absolute;
+      // top:0;
+      // bottom: 0;
+      top: 50%;
+      height: 20px;
+      line-height: 20px;
+      margin-top: -10px;
+      right: 136px;
+      color: #4B9AED;
+
+
+    }
+  }
+
+ 
+
+}

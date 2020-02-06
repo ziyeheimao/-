@@ -1,0 +1,126 @@
+.box{
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+  
+    header {
+      height: 44px;
+      width: 100%;
+
+    }
+    section {
+        width: 100%;
+        overflow: auto;
+        flex: 1;
+        height: 100%;
+        .tittle{
+            font-size: 16px;
+            color: #000000;
+            font-weight: 600;
+            margin: 12px 0px 0px 12px;
+        }
+        .divider{
+            margin-top: 17px;
+        }
+        .price{
+            .span{
+                font-size: 10px;
+                color: #FF3C3C;
+            }
+            span{
+                color: #FF3C3C;
+                font-size: 16px;
+                font-weight: 600;
+            }
+            color: #999999;
+            font-size: 10px;
+            margin: 19px 0px 0px 12px;
+        }
+        .h1{
+            margin: 25px 0px 0px 12px;
+            color: #666666;
+            font-size: 14px;
+        }
+        .time{
+            display: flex;
+            padding-left: 12px;
+            margin-top: 16px;
+            text-align: center;
+            .day{
+                position: relative;
+                height: 60px;
+                width: 88px;
+                background: #ECF4F5;
+                border: 1px solid #ECF4F5;
+                color: #999999;
+                margin-left: 10px;
+                font-size: 14px;
+                // margin: 16px 10px 0px 12px;
+                border-radius: 4px;
+                .top{
+                    margin: 10px 4px 0px 2px;
+                }
+                .bottom{
+                }
+                &:first-child{
+                    margin-left:0;
+                }
+                &.act{
+                    background: #4B9AED;
+                    color: #fff;
+                    .t-box{
+                        display: block;
+                    }
+                }
+                .t-box{
+                    display: none;
+                    position: absolute;
+                    right: 0;
+                    bottom: 0; 
+                    border-top: 14px solid transparent;
+                    border-bottom: 14px solid #fff;
+                    border-right: 14px solid #fff;
+                    border-left: 14px solid transparent;
+                    width: 0;
+                    height: 0;
+                    color: #4B9AED;
+                    font-size: 16px;
+
+                }
+            }
+            .days{
+                height: 60px;
+                width: 51px;
+                background: #ECF4F5;
+                border: 1px solid #ECF4F5;
+                margin-left: 8px;
+                text-align: center;
+                border-radius: 4px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                .top{
+                    font-weight: 600;
+                }
+                .bottom{
+                    font-weight: 600;
+                }
+            }
+        }
+        .points{
+            color: #9EC2E8;
+            font-size: 12px;
+            margin: 10px 0px 0px 12px;
+        }
+        .submit{
+            width: 346px;
+            margin: 10px 14px 11px 15px;
+            span{
+                font-size: 14px; 
+            }
+        }
+    }
+}
