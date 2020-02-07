@@ -6,24 +6,26 @@
       <div class="card" v-for="(v, k) in cards" :key="k">
 
         <div class="info-box">
-          <img :src="v.doctorImg" alt="" width="65px" height="65px">
+          <img :src="v.headImg" alt="" width="65px" height="65px">
           <div class="info">
-            <div>
+            <div class="user-info">
               <span class="name">
-                {{v.doctorName}}
-                <van-tag plain type="success">职称</van-tag>
+                {{v.name}}
+                <van-tag plain type="success" color="#64BBC3" text-color="#64BBC3">{{v.doctorTypeText}}</van-tag>
               </span>
             </div>
 
-            <div>
+            <div class="hospital-box">
               <span class="hospital">{{v.hospitalName}}</span>
-              ·
+              &nbsp;
               <span class="department">{{v.departmentName}}</span>
-              ·
-              <span class="hospitalTypeText">{{v.hospitalTypeText}}</span>
+              <!-- ·
+              <span class="hospitalTypeText">{{v.hospitalTypeText}}</span> -->
             </div>
           </div>
         </div>
+
+        <van-divider />
 
         <div class="btn">
           <span @click="click(0, v)">在线咨询</span> | 
@@ -43,7 +45,11 @@ export default {
       cards: [],
       speedProgress: 0,
       option3: [],
-      option2: []
+      option2: [],
+      form: {
+        page: 1,
+        limit: 10
+      }
     }
   },
   computed: {},
@@ -65,10 +71,12 @@ export default {
     },
 
     init2 () {
-      this.$api.medical.inquiryRecordUserList().then(res => {
+      this.$api.medical.doctorListFollow(this.form).then(res => { // 关注过的医生
+        console.log('关注过的医生', res)
         if (res.code === 0) {
           for (let i of res.bean) {
             i.hospitalTypeText = this.findAttrVal(i.hospitalType, this.option2, 'value', 'text') // 医院类型
+            i.doctorTypeText = this.findAttrVal(i.doctorType, this.option3, 'value', 'text') // 职称
           }
           this.cards = res.bean
         }
@@ -128,17 +136,17 @@ export default {
 </script>
 
 <style lang='scss' scoped>
+@import './index.scss';
 .ctn{
   font-size: 15px;
-  color: #888;
   & > .cards{
     padding: 10px;
-    background-color: #eee;
     & > .card{
       margin-bottom: 10px;
       background-color: #fff;
       box-sizing: border-box;
       padding: 15px;
+      border-radius: 5px;
       & > .info-box{
         display: flex;
         justify-content: space-between;
@@ -150,19 +158,20 @@ export default {
           flex: 1;
           margin-left: 10px;
           .name{
-            color: #000;
+            color: $h_c;
             font-size: 20px;
           }
         }
-        &>.info :nth-child(1){
+        &>.info>.user-info{
           margin-top: 8px;
         }
-        &>.info :nth-child(2) {
+        &>.info>.hospital-box {
+          color: $fz_c;
           margin-top: 6px;
         }
       }
+
       & > .btn{
-        border-top: 1px solid #888;
         display: flex;
         justify-content: space-between;
         padding: 10px 15px;

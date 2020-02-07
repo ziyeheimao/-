@@ -92,9 +92,9 @@ export default {
 </script>
 
 <style lang='scss' scoped>
+@import './index.scss';
+
 .ctn{
-  background-color: rgb(246,244,245);
-  min-height: 100%;
   &>.cards{
     &>.card{
       font-size: 14px;

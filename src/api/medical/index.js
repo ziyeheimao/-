@@ -20,6 +20,9 @@ const medical = {
   doctorFollow (doctorId, data) { // 关注 *******************************************
     return post(`/doctor/follow/${doctorId}`, data)
   },
+  doctorListFollow () { // 关注医生列表 *******************************************
+    return get(`/doctor/list/follow`, )
+  },
 
   // 疾病
   diseaseAll () { // 所有疾病 *******************************************
@@ -41,10 +44,10 @@ const medical = {
   inquiryRecordAdd (data) { // 新增问诊记录 *******************************************
     return post('/inquiry/record/add', data)
   },
-  inquiryRecordDoctorList (data) { // 医生问诊记录列表
+  inquiryRecordDoctorList (data) { // 医生问诊记录列表 *******************************************
     return get('/inquiry/record/doctor/list', data)
   },
-  inquiryRecordUserDoctor (doctorId, data) { // 用户针对某个医生问诊记录列表 ??????????????????????
+  inquiryRecordUserDoctor (doctorId, data) { // 用户针对某个医生问诊记录列表 *******************************************
     return get(`/inquiry/record/user/doctor/${doctorId}`, data)
   },
   inquiryRecordUserList (data) { // 用户问诊记录列表 *******************************************

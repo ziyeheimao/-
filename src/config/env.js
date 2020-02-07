@@ -8,18 +8,19 @@
  */
 
 // let baseUrl = 'http://192.168.204.98:9091';
-let baseUrl = 'http://118.31.170.128:9091/';
+let baseUrl = 'http://118.31.170.128:9091/'; // 测试环境服务器ip
 
 
 let routerMode = 'hash';
-let imgBaseUrl = 'https://mdst.51dojoy.com';
+let imgBaseUrl = 'https://mdst.51dojoy.com'; // 图片路径
 
 
 if (process.env.NODE_ENV == 'development') {
     imgBaseUrl = '/img/';
 
 }else if(process.env.NODE_ENV == 'production'){
-	baseUrl = 'https://jzgapit.51dojoy.com';
+	// baseUrl = 'https://jzgapit.51dojoy.com'; // 生产环境服务器ip
+	baseUrl = 'http://118.31.170.128:9091/'; // 生产环境服务器ip
     imgBaseUrl = '';
 }
 

@@ -14,31 +14,36 @@
 
     <van-list class="cards" v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
       <div class="card" v-for="(v,k) in cards" :key="k" @click="doctorInfo(v)">
-        <img :src="v.headImg" alt="">
+        <div class="info-box">
+          <img :src="v.headImg" alt="">
 
-        <div class="info">
-          <div>
-            <span class="name">{{v.name}}</span>
-            <span>{{v.doctorTypeText}}</span>
-          </div>
+          <div class="info">
+            <div>
+              <span class="name">{{v.name}}</span>
+              &nbsp;
+              <van-tag plain type="success" color="#64BBC3" text-color="#64BBC3">{{v.doctorTypeText}}</van-tag>
+            </div>
 
-          <div class="between">
-            <span>{{v.hospitalName}} | {{v.departmentName}}</span>
-            <span>{{v.hospitalTypeText}}</span>
-          </div>
+            <div class="between title">
+              <span>{{v.hospitalName}} | {{v.departmentName}}</span>
+              <span>{{v.hospitalTypeText}}</span>
+            </div>
 
-          <div>
-            <span class="info">擅长：{{v.goodAt}}</span>
-          </div>
+            <div>
+              <span class="info">擅长：{{v.goodAt}}</span>
+            </div>
 
-          <div class="between">
-            <span>问诊量{{v.inquiryNum}}</span>
-            <span>平均回复时长 {{v.avReplyTime}}</span>
+            <div class="between">
+              <span>问诊量{{v.inquiryNum}}</span>
+              <span>平均回复时长 {{v.avReplyTime}}</span>
+            </div>
           </div>
+        </div>
 
-          <div class="btn">
-            <van-button type="default" @click.stop="consultation(v)">免费在线咨询</van-button>
-          </div>
+        <van-divider></van-divider>
+
+        <div class="btn">
+          <van-button type="info" size="small" color="#4B7DC2" @click.stop="consultation(v)">免费咨询</van-button>
         </div>
       </div>
     </van-list>
@@ -164,7 +169,6 @@ export default {
       this.$router.push({path: '/medical/home/doctorInfo', query: { id: v.id }})
     },
     consultation (v) {
-      console.log(v, '跳转填写病情')
       this.$router.push({path: '/medical/home/condition', query: {id: v.id}}) // 填写病情
     },
     // 充值搜索的默认参数
@@ -243,6 +247,8 @@ export default {
 </script>
 
 <style lang='scss' scoped>
+@import './index.scss';
+
 .ctn{
   &>.van-tree-select{
     position: relative;
@@ -252,49 +258,56 @@ export default {
     padding: 10px;
     font-size: 15px;
     &>.card~.card{
-      margin-bottom: 10px;
+      margin-top: 10px;
     }
     &>.card{
-      padding: 8px;
+      background-color: #fff;
+      padding: 15px;
       border: 1px solid #eee;
       border-radius: 5px;
 
-      display: flex;
-      justify-content: space-between;
+      &>.info-box{
+        display: flex;
+        justify-content: space-between;
+        &>img{
+          border-radius: 50%;
+          width: 60px;
+          height: 60px;
+        }
+        &>.info{
+          flex: 1;
+          margin-left: 10px;
 
-      &>img{
-        border-radius: 50%;
-        width: 80px;
-        height: 80px;
+          &>div~div{
+            margin-top: 5px;
+          }
+
+          &>.between{
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+          }
+
+          & .name{
+            font-size: 20px;
+            color: $h_c;
+          }
+          & .title{
+            color: $fz_c;
+          }
+          & .info{
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 1;
+            overflow: hidden;
+          }
+        }
       }
-      &>.info{
-        flex: 1;
-        margin-left: 5px;
-
-        &>div~div{
-          margin-top: 5px;
-        }
-
-        &>.between{
-          display: flex;
-          justify-content: space-between;
-          flex-wrap: wrap;
-        }
-
-        & .name{
-          font-size: 20px;
-        }
-
-        & .info{
-          display: -webkit-box;
-          -webkit-box-orient: vertical;
-          -webkit-line-clamp: 1;
-          overflow: hidden;
-        }
-
-        &>.btn{
-          text-align: right;
-        }
+      &>.van-divider{
+        margin: 10px 0 !important;
+      }
+      &>.btn{
+        text-align: right;
       }
     }
   }

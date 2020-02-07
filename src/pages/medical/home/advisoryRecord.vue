@@ -1,20 +1,22 @@
 <template>
   <section class="ctn">
     <van-nav-bar title="咨询记录" left-arrow @click-left="quit"/>
-    <div class="cards">
+
+    <van-list class="cards" v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
+
       <div class="card" v-for="(v,k) in cards" :key="k" @click="char(v)">
         <div class="info-box">
           <img :src="v.doctorImg" alt="">
 
           <div class="info">
-            <div class="yi">
+            <div>
               <span class="name">
                 {{v.doctorName}}
-                <van-tag plain type="success">职称</van-tag>
+                <van-tag plain type="success" color="#64BBC3" text-color="#64BBC3">{{v.doctorTypeText}}</van-tag>
               </span>
             </div>
 
-            <div>
+            <div class="hospital-info">
               <span>{{v.hospitalName}}</span> | 
               <span>{{v.departmentName}}</span>
               <span>{{v.hospitalTypeText}}</span>
@@ -25,9 +27,13 @@
             </div>
           </div>
         </div>
+
+        <van-divider />
+
         <p class="date">{{v.createTime}}</p>
       </div>
-    </div>
+    <!-- </div> -->
+    </van-list>
   </section>
 </template>
 
@@ -40,7 +46,16 @@ export default {
       ],
       option2: [],
       option3: [],
-      speedProgress: 0
+      speedProgress: 0,
+
+      form: {
+        page: 0,
+        limit: 10
+      },
+
+      // 触底翻页容器
+      loading: false,
+      finished: false
     }
   },
   computed: {},
@@ -52,14 +67,39 @@ export default {
       this.$router.push({path: '/medical/home/chat', query: v})
     },
     init2 () {
-      this.$api.medical.inquiryRecordUserList().then(res => {
-        if (res.code === 0) {
-          for (let i of res.bean) {
-            i.hospitalTypeText = this.findAttrVal(i.hospitalType, this.option2, 'value', 'text') // 医院类型
+      let id = this.$route.query.id
+      if (id) { // 有id查 某个单一医生的咨询记录
+        let req = { doctorId: id, page: this.form.page, limit: this.form.limit }
+        this.$api.medical.inquiryRecordUserDoctor(id, req).then(res => {
+          if (res.code === 0) {
+            for (let i of res.bean) {
+              i.doctorTypeText = this.findAttrVal(i.doctorType, this.option3, 'value', 'text') // 职称
+              i.hospitalTypeText = this.findAttrVal(i.hospitalType, this.option2, 'value', 'text') // 医院类型
+            }
+            this.cards = res.bean
+            this.isPageMax(res)
           }
-          this.cards = res.bean
-        }
-      })
+        })
+      } else { // 无id分页查所有咨询记录
+        this.$api.medical.inquiryRecordUserList(this.form).then(res => {
+          if (res.code === 0) {
+            for (let i of res.bean) {
+              i.doctorTypeText = this.findAttrVal(i.doctorType, this.option3, 'value', 'text') // 职称
+              i.hospitalTypeText = this.findAttrVal(i.hospitalType, this.option2, 'value', 'text') // 医院类型
+            }
+            this.cards = res.bean
+            this.isPageMax(res)
+          }
+        })
+      }
+    },
+    // 判断分页 是否还有后续内容
+    isPageMax (res) {
+      // 加载状态结束
+      this.loading = false;
+
+      // 数据全部加载完成
+      if (res.bean.length < 10) this.finished = true;
     },
 
     init () {
@@ -104,7 +144,13 @@ export default {
           return i[targetAttrName]
         }
       }
-    }
+    },
+
+    // 滚动容器触发触底事件
+    onLoad () {
+      this.page++
+      this.init()
+    },
   },
   created () {
     this.init()
@@ -115,20 +161,16 @@ export default {
 </script>
 
 <style lang='scss' scoped>
+@import './index.scss';
+
 .ctn{
   & > .cards{
     & > .card{
+      background-color: #fff;
+      border-radius: 5px;
       margin: 10px;
-      border: 1px solid #888;
-      border-radius: 10px;
       font-size: 15px;
       color: #666;
-
-      & > .date{
-        border-top: 1px solid #888;
-        text-align: right;
-        padding: 10px 20px;
-      }
 
       & > .info-box{
         display: flex;
@@ -147,11 +189,12 @@ export default {
           & > div{
             margin-top: 5px;
           }
-          & > .yi{
-            color: #000;
-          }
           & .name{
+            color: $h_c;
             font-size: 20px;
+          }
+          &>.hospital-info{
+            color: $fz_c;
           }
           & .info {
             display: -webkit-box;
@@ -160,6 +203,12 @@ export default {
             overflow: hidden;
           }
         }
+      }
+
+      & > .date{
+        text-align: right;
+        padding: 10px 20px 15px;
+        color: $fz_c;
       }
     }
   }

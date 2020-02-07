@@ -1,0 +1,37 @@
+// 字体颜色
+$h_c: #000;                          // 大标题 黑色
+$title_c: #4c555c;                 // 小标题
+$ctn_c: #666;                      // 正文内容
+$fz_c: #999;                       // 辅助字体
+
+// 其他颜色
+$lan_shen: rgb(34, 93, 171);       // 蓝深 （主色
+$lan_light : rgb(75, 125, 194);    // 蓝浅 （主色
+
+$fuzhu: rgb(100, 187, 195);        // 辅助色
+
+$dianzhui: #64bbc3;                // 点缀色
+$bgc: #f4f4f4;                     // 背景色
+$line: #f4f4f4;                    // 线条色
+$line_dark: #999;                  // 深色线条色
+
+// 按钮颜色 color="#4B7DC2"
+// 徽章颜色 color="#64BBC3" text-color="#64BBC3"
+
+section.ctn{
+  background-color: $bgc;
+  min-height: 100%;
+  color: $ctn_c;
+}
+
+.van-divider{
+  border-color: $line_dark;
+  margin: 5px;
+}
+
+// 背景图片地址和大小
+// @mixin bis($url) {
+//   background-image: url($url);
+//   background-repeat: no-repeat;
+//   background-size: 100% 100%;
+// }

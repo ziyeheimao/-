@@ -1,6 +1,6 @@
 <template>
   <section class="ctn">
-    <van-nav-bar title="医生详情" left-arrow @click-left="quit"/>
+    <van-nav-bar title="医生详情" left-arrow @click-left="quit" style="border-bottom: 1px solid #f4f4f4;"/>
 
     <div class="info">
       <div class="introduction">
@@ -9,7 +9,8 @@
         <div class="info">
           <div>
             <span class="name">{{info.name}}</span>
-            <span>{{info.doctorTypeText}}</span>
+            &nbsp;
+            <van-tag plain type="success" color="#64BBC3" text-color="#64BBC3">{{info.doctorTypeText}}</van-tag>
           </div>
 
           <div class="hospitalName">
@@ -33,12 +34,12 @@
         <div class="box">
           <h4>
             出诊医院
-            <van-tag round plain type="warning">{{info.hospitalTypeText}}</van-tag>
+            <van-tag round plain type="warning" color="#64BBC3" text-color="#64BBC3">{{info.hospitalTypeText}}</van-tag>
           </h4>
           <p>
             {{info.hospitalName}}
             <br/>
-            {{info.address}}
+            {{info.hospitalAddress}}
             <br/>
             {{info.departmentName}}
           </p>
@@ -66,34 +67,21 @@
         </van-button>
       </div>
       <div class="box box2">
-        <van-button size="normal" type="info" @click="click(2)">在线咨询</van-button>
+        <van-button size="normal" type="info" color="#4B7DC2" @click="click(2)">在线咨询</van-button>
       </div>
     </div>
   </section>
 </template>
 
 <script>
+import Vue from 'vue';
+import { Toast } from 'vant';
+Vue.use(Toast);
 export default {
   components: {},
   data () {
     return {
-      info: {
-        name: '张医生',
-        count: 66,
-        duration: 3,
-        price: 0,
-        goodAt: '新型肺炎，肺癌，乳腺癌，肺叶片玻璃体混浊新型肺炎，肺癌，乳腺癌，肺叶片玻璃体混浊新型肺炎，肺癌，乳腺癌，肺叶片玻璃体混浊',
-        intro: '1999年毕业于xxx大学，肿瘤学博士，上海第一人民医院重量可注释意识，2016年至2017年在美国滨州州立大学作为访问学者访学一年，以第一作者发表SCI论文20鱼片，2019获得上海市浦江人才计划，主持股价自认科学急金1想，参与国际化年自然科学基金3项',
-        address: '上海市虹口区海宁路100号（北部），松江区新松江路650好（南部）',
-        date: '2020-01-01',
-        doctorTypeText: '主任医师',
-        state: '关 注',
-        hospitalName: '上海市第一人民医院',
-        departmentName: '内科',
-        hospitalTypeText: '三甲级',
-        id: 1,
-        headImg: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1580753527077&di=3ac1dd5a776ccbd584e60fb97da268bf&imgtype=0&src=http%3A%2F%2Fimg.zcool.cn%2Fcommunity%2F01dee15541f518000001714a0ac456.jpg%40900w_1l_2o_100sh.jpg'
-      },
+      info: {},
 
       option2: [], // 医院等级
       option3: [], // 职称等级
@@ -109,17 +97,19 @@ export default {
     click (type, state) {
       switch (type) {
         case 0:
-          this.$router.push('/medical/home/advisoryRecord') // 咨询记录
+          this.$router.push({path: '/medical/home/advisoryRecord', query: {id: this.info.id}}) // 咨询记录
           break
         case 1:
           if (state === 0) { // 关注
             var req = {doctorId: Number(this.info.id)}
             this.$api.medical.doctorFollow(this.info.id, req).then(res => {
+              Toast(res.msg);
               if (res.code === 0) this.init2(this.$route.query.id) // 刷新页面数据
             })
           } else { // 取关
             var req = {doctorId: Number(this.info.id)}
-            this.$api.medical.doctorFollow(this.info.id, req).then(res => {
+            this.$api.medical.doctorCancel(this.info.id, req).then(res => {
+              Toast(res.msg);
               if (res.code === 0) this.init2(this.$route.query.id) // 刷新页面数据
             })
           }
@@ -216,7 +206,10 @@ export default {
 </script>
 
 <style lang='scss' scoped>
+@import './index.scss';
+
 .ctn{
+  background-color: #fff !important;
   &>.info{
     padding: 15px;
     &>.introduction{
@@ -224,7 +217,7 @@ export default {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 15px;
+      padding: 0;
       &>img{
         width: 70px;
         height: 70px;
@@ -232,11 +225,13 @@ export default {
       }
       &>.info{
         flex:1;
-        margin-left: 10px;
+        margin-left: 15px;
         & .name{
           font-size: 20px;
+          color: $h_c;
         }
         &>.hospitalName{
+          color: $fz_c;
           display: flex;
           justify-content: space-between;
           flex-wrap: wrap;
@@ -247,13 +242,12 @@ export default {
       margin-top: 15px;
       &>.box{
         &>h4{
-          font-size: 13px;
-          color: #555;
+          font-size: 18px;
+          color: $h_c;
         }
         &>p{
-          font-size: 16px;
+          font-size: 15px;
           margin: 8px 0 30px;
-          text-indent: 32px;
         }
       }
     }

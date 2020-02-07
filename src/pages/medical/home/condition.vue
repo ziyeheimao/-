@@ -1,6 +1,6 @@
 <template>
   <section class="ctn">
-    <van-nav-bar title="填写病情" left-arrow @click-left="quit"/>
+    <van-nav-bar title="填写病情" left-arrow @click-left="quit" style="border-bottom: 1px solid #f4f4f4;"/>
 
     <van-cell title="年龄 / 性别" :value="text" @click="show = true" required />
 
@@ -11,6 +11,7 @@
     <div class="box">
       <p>病情描述</p>
       <van-field v-model="form.diseaseDesc" rows="5" type="textarea" required
+        maxlength="500" show-word-limit
         placeholder="详细描述您的病情症状,曾经做过的检查、治疗情况，以及想获得医生的帮助"/>
     </div>
 
@@ -29,7 +30,7 @@
       <van-uploader v-model="form.fileList" multiple :max-count="3" :before-read="beforeRead"/>
     </div>
 
-    <van-button type="info" size="large" @click="submit">发送咨询</van-button>
+    <van-button type="info" size="large" @click="submit" color="#4B7DC2">发送咨询</van-button>
   </section>
 </template>
 
@@ -188,7 +189,10 @@ export default {
 </script>
 
 <style lang='scss' scoped>
+@import './index.scss';
+
 .ctn{
+  background-color: #fff !important;
   & > .box{
     padding: 15px;
     &>p{

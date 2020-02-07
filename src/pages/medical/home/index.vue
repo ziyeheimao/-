@@ -3,21 +3,27 @@
 		<van-nav-bar title="寻医问诊" left-arrow @click-left="quit"/>
 
 		<div class="top">
-			<div class="card" @click="click(0)">
-				<van-icon name="comment" />
+			<div class="card left" @click="click(0)">
+				<!-- <van-icon name="comment" /> -->
+				<img src="../../../assets/img/indexCardLeft.png" alt="">
 				咨询记录
 			</div>
-			<div class="card" @click="click(1)">
-				<van-icon name="like" />
+			<div class="card right" @click="click(1)">
+				<!-- <van-icon name="like" /> -->
+				<img src="../../../assets/img/indexCardRight.png" alt="">
 				医生服务
 			</div>
 		</div>
 
-		<van-tabs v-model="tabsActive">
+		<van-tabs v-model="tabsActive"
+			title-inactive-color='rgb(89, 87, 87)'
+			title-active-color='rgb(34, 93, 171)'
+			:swipeable='true'
+			line-height='0px'>
 			<van-tab class="tab-box" title="按科室找">
 				<!-- 九宫格 -->
 				<van-grid :column-num="3">
-					<van-grid-item class="grid-item" v-for="(v,k) in department" :key="k" :icon="v.icon ? v.icon : 'photo-o'" :text="v.name" @click="toDoctor(v)"/>
+					<van-grid-item class="grid-item" v-for="(v,k) in department" :key="k" :icon="v.iconUrl ? v.iconUrl : 'photo-o'" :text="v.name" @click="toDoctor(v)"/>
 				</van-grid>
 			</van-tab>
 
@@ -33,10 +39,10 @@
 		</div>
 
 		<!-- 占位 -->
-		<div class="bottom"></div>
+		<div class="bottom" style="height: 70px;"></div>
 
 		<van-tabbar v-model="tabbarActive">
-			<van-tabbar-item icon="coupon">肺炎疫情</van-tabbar-item>
+			<van-tabbar-item icon="wap-home">首 页</van-tabbar-item>
 			<van-tabbar-item icon="add-square">寻医问诊</van-tabbar-item>
 			<van-tabbar-item icon="manager">个人中心</van-tabbar-item>
 		</van-tabbar>
@@ -48,11 +54,7 @@
 export default {
   components: {},
   // props: [''],
-  computed: {
-    // InnerSize () {
-    //   return this.$store.getters.InnerSize
-    // },
-  },
+  computed: {},
   data () {
     return {
 			tabsActive: 0,
@@ -84,7 +86,8 @@ export default {
 		},
 
 		toDoctor2 (v) {
-			this.$router.push({path: `/medical/home/doctor`}) // , query: { id: v.id }
+			console.log(v)
+			this.$router.push({path: `/medical/home/doctor`, query: { id: v.departmentId }}) // , query: { id: v.id }
 		},
 		init () {
 			this.$api.medical.diseaseAll().then(res => { // 所有疾病
@@ -93,6 +96,7 @@ export default {
 
 			this.$api.medical.departmentRecommend().then(res => { // 推荐科室
 				if (res.code === 0) this.department = res.bean
+				console.log(this.department)
 			})
 		}
 	},
@@ -119,6 +123,8 @@ export default {
 </script>
 
 <style lang='scss' scoped>
+@import './index.scss';
+
 .btn{
 	padding: 5px;
 	text-align: center;
@@ -130,18 +136,32 @@ export default {
 	&>.top{
 		display: flex;
 		justify-content: space-around;
-		padding: 25px;
 		&>.card{
-			font-size: 20px;
-			border: 1px solid #eee;
+			width: 50%;
+			font-size: 19px;
 			padding: 25px 15px;
 			text-align: center;
 			display: flex;
-			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			&>img{
+				width: 40px;
+				margin-right: 10px;
+			}
+		}
+		.card.left{
+			background-color: rgba(248, 239, 222, 1);
+			color: rgb(146, 111, 44);
+		}
+		.card.right{
+			background-color: rgba(235, 238, 254, 1);
+			color: rgb(90, 106, 187);
 		}
 	}
 
 	&>.van-tabs{
+		background-color: #fff;
+
 		.disease-card-box{
 			display: flex;
 			justify-content: space-between;
@@ -156,11 +176,11 @@ export default {
 			}
 		}
 	}
-
-	&>.bottom{
-		height: 70px;
+	&>.btn{
+		padding: 15px 0;
+		margin-top: 10px;
+		color: $title_c;
 	}
-
 	&>.van-tabbar{}
 }
 </style>
