@@ -13,6 +13,7 @@ import 'lib-flexible/flexible'
 import filters from './filters'
 import FastClick from 'fastclick'
 
+import websdk from "easemob-websdk" // 环信
 
 import Vant from 'vant';
 import 'vant/lib/index.css';

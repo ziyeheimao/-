@@ -5,7 +5,7 @@
     <div class="cards">
       <div class="card" v-for="(v, k) in cards" :key="k">
 
-        <div class="info-box">
+        <div class="info-box" @click="click(3, v)">
           <img :src="v.headImg" alt="" width="65px" height="65px">
           <div class="info">
             <div class="user-info">
@@ -28,9 +28,9 @@
         <van-divider />
 
         <div class="btn">
-          <span @click="click(0, v)">在线咨询</span> | 
-          <span @click="click(1, v)">咨询记录</span> | 
-          <span @click="click(2, v)">预约挂号</span>
+          <span @click="click(0, v)">在线咨询</span>
+          <span @click="click(1, v)">咨询记录</span>
+          <span @click="click(2, v)" class="disabled">预约挂号</span>
         </div>
       </div>
     </div>
@@ -60,19 +60,22 @@ export default {
     click (type, v) {
       switch (type) {
         case 0:
-          this.$router.push({path: '/medical/home/condition', query: {id: v.id}}) // 在线咨询
+          this.$router.push({path: '/medical/home/advisoryRecord', query: {id: v.id}}) // 在线咨询
           break
         case 1:
           this.$router.push({path: '/medical/home/chat', query: v})
           break
         case 2:
           break
+        case 3:
+          this.$router.push({path: '/medical/home/doctorInfo', query: v})
+          // 跳转医生详情
+          break
       }
     },
 
     init2 () {
       this.$api.medical.doctorListFollow(this.form).then(res => { // 关注过的医生
-        console.log('关注过的医生', res)
         if (res.code === 0) {
           for (let i of res.bean) {
             i.hospitalTypeText = this.findAttrVal(i.hospitalType, this.option2, 'value', 'text') // 医院类型
@@ -172,9 +175,13 @@ export default {
       }
 
       & > .btn{
+        color: $h_c;
         display: flex;
         justify-content: space-between;
         padding: 10px 15px;
+      }
+      & > .btn > .disabled{
+        color: $fz_c;
       }
     }
   }
