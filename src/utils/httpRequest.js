@@ -6,7 +6,8 @@
  */
 import {
     baseUrl
-} from '@/config/env'
+}
+from '@/config/env'
 import axios from 'axios';
 import router from '../router';
 import store from '@/store/index';
@@ -26,7 +27,10 @@ const tip = msg => {
     });
 }
 
-
+// 获取时间戳
+const timestamp = () => {
+    return new Date().getTime()
+}
 /** 
  * 请求失败后的错误统一处理 
  * @param {Number} status 请求失败的状态码
@@ -108,33 +112,18 @@ http.interceptors.response.use(
 export function get(url, params = {}) {
     return new Promise((resolve, reject) => {
         try {
-            setToken("callBack");
-            window["callBack"] = result => {
+            let t = timestamp()
+            setToken('callBack' + t);
+            window['callBack' + t] = result => {
+                // Toast(result)
                 let obj = JSON.parse(result);
                 setCookie("token", obj.token);
                 store.commit("setUserInfo", obj)
                 http.get(baseUrl + url, {
                     params: params
                 })
-                    .then(response => {
-                        if (response.data.code == 1100) {
-                            removeCookie('token');
-                            gotoNativeLogin();
-                            return !1
-                        }
-                        resolve(response.data);
-                    })
-                    .catch(err => {
-                        reject(err)
-                    })
-            };
-        }
-        catch (err) {
-            // setCookie("token", "46be7fd3-4ffe-4b05-a5f8-2f147f935ecb");
-            http.get(baseUrl + url, {
-                params: params
-            })
                 .then(response => {
+                    // Toast(response.data.code+'g'+obj.token)
                     if (response.data.code == 1100) {
                         removeCookie('token');
                         gotoNativeLogin();
@@ -145,9 +134,25 @@ export function get(url, params = {}) {
                 .catch(err => {
                     reject(err)
                 })
+            };
         }
-
-
+        catch (err) {
+            // setCookie("token", "46be7fd3-4ffe-4b05-a5f8-2f147f935ecb");
+            http.get(baseUrl + url, {
+                params: params
+            })
+            .then(response => {
+                if (response.data.code == 1100) {
+                    removeCookie('token');
+                    gotoNativeLogin();
+                    return !1
+                }
+                resolve(response.data);
+            })
+            .catch(err => {
+                reject(err)
+            })
+        }
     })
 }
 
@@ -161,15 +166,16 @@ export function get(url, params = {}) {
 
 export function post(url, data = {}) {
     return new Promise((resolve, reject) => {
-
         try {
-            setToken("callBack");
-            window["callBack"] = result => {
+            let t = timestamp()
+            setToken('callBack' + t);
+            window['callBack' + t] = result => {
                 let obj = JSON.parse(result);
                 setCookie("token", obj.token);
                 store.commit("setUserInfo", obj)
                 http.post(baseUrl + url, data)
                 .then(response => {
+                    // Toast('p'+obj.token)
                     if (response.data.code == 1100) {
                         removeCookie('token');
                         gotoNativeLogin();
@@ -210,8 +216,9 @@ export function patch(url, data = {}) {
     return new Promise((resolve, reject) => {
 
         try {
-            setToken("callBack");
-            window["callBack"] = result => {
+            let t = timestamp()
+            setToken('callBack' + t);
+            window['callBack' + t] = result => {
                 let obj = JSON.parse(result);
                 setCookie("token", obj.token);
                 store.commit("setUserInfo", obj)
@@ -257,8 +264,9 @@ export function put(url, data = {}) {
     return new Promise((resolve, reject) => {
 
         try {
-            setToken("callBack");
-            window["callBack"] = result => {
+            let t = timestamp()
+            setToken('callBack' + t);
+            window['callBack' + t] = result => {
                 let obj = JSON.parse(result);
                 setCookie("token", obj.token);
                 store.commit("setUserInfo", obj)

@@ -1,42 +1,48 @@
 <template>
   <section class="ctn">
-    <van-nav-bar title="xx医生" left-arrow @click-left="quit"/>
+    <van-nav-bar :title="info.doctorName" left-arrow @click-left="quit"/>
+
+    <div class="history" v-show="historyBtnActivate === 0">
+      <span @click="pullHistory">历史消息</span>
+    </div>
+    
     <div class="chats">
       <div class="chat" v-for="(v,k) in chars" :key="k">
         <p class="date">
           {{v.date}}
         </p>
         <div class="info" :class="v.type === 0 ? 'left' : 'right'">
-          <img :src="v.imgUrl" alt="">
-          <p>{{v.info}}</p>
+          <!-- 头像 -->
+          <img :src="v.type === 0 ? huanxin.partyUserHeadImg : huanxin.currentUserHeadImg" alt="">
+
+          <!-- 消息 -->
+          <p v-if="!v.img">{{v.info}}</p>
+
+          <!-- 图片消息 -->
+          <p v-if="v.img"><img :src="v.img" alt="" width="100%"></p>
+
         </div>
       </div>
     </div>
 
     <div class="b"></div>
     <div class="b2">
-      <van-field v-model="form.message" label="回复">
-
+      <van-field v-model="form.text" @keyup.enter="text" label="回复">
         <!-- clearable type="textarea" rows="2" -->
-
         <div slot="button" class="btn">
-          <!-- <van-icon class="icon" name="smile-o" slot="button"/> -->
-          <!-- <van-icon class="icon" name="add-o" slot="button"/> -->
           <van-icon class="icon" name="photo-o" @click="submit(1)"/>
 
           <van-button type="default" size="small" color="#4B7DC2" @click="submit(2)">发 送</van-button>
         </div>
       </van-field>
 
-      <input type="file" id="file" style="display: none;" @change="beforeUpdata">
+      <input type="file" id="file" style="display: none;" @change="img">
     </div>
   </section>
-
 </template>
 
 <script>
-let config = require('../../../../static/sdk/WebIMConfig')
-config = config.default.config
+import timestampToCommonDate from '../../../utils/formatTime'
 
 import Vue from 'vue';
 import { Toast } from 'vant';
@@ -46,237 +52,230 @@ export default {
   components: {},
   data () {
     return {
-      chars: [
-        {date: '2020-01-01 16:00:23', info: '得了灰指甲~一个传染力俩~问我咋么办!? 马上用亮甲 O(∩_∩)O  得了灰指甲~一个传染力俩~问我咋么办!? 马上用亮甲 O(∩_∩)O得了灰指甲~一个传染力俩~问我咋么办!? 马上用亮甲 O(∩_∩)O得了灰指甲~一个传染力俩~问我咋么办!? 马上用亮甲 O(∩_∩)O', type: 0, imgUrl: 'http://img.ea3w.com/393/392461.jpg'},
-        {date: '2020-01-01 16:00:23', info: '得了灰指甲~一个传染力俩~问我咋么办!? 马上用亮甲 O(∩_∩)O', type: 1, imgUrl: 'https://n.sinaimg.cn/sinacn17/530/w700h630/20181107/703a-hnprhzv9128002.jpg'},
-        {date: '2020-01-01 16:00:23', info: '得了灰指甲~一个传染力俩~问我咋么办!? 马上用亮甲 O(∩_∩)O', type: 0, imgUrl: 'http://img.ea3w.com/393/392461.jpg'},
-        {date: '2020-01-01 16:00:23', info: '得了灰指甲~一个传染力俩~问我咋么办!? 马上用亮甲 O(∩_∩)O', type: 1, imgUrl: 'https://n.sinaimg.cn/sinacn17/530/w700h630/20181107/703a-hnprhzv9128002.jpg'},
-        {date: '2020-01-01 16:00:23', info: '得了灰指甲~一个传染力俩~问我咋么办!? 马上用亮甲 O(∩_∩)O', type: 1, imgUrl: 'https://n.sinaimg.cn/sinacn17/530/w700h630/20181107/703a-hnprhzv9128002.jpg'},
-        {date: '2020-01-01 16:00:23', info: '得了灰指甲~一个传染力俩~问我咋么办!? 马上用亮甲 O(∩_∩)O', type: 1, imgUrl: 'https://n.sinaimg.cn/sinacn17/530/w700h630/20181107/703a-hnprhzv9128002.jpg'},
-        {date: '2020-01-01 16:00:23', info: '得了灰指甲~一个传染力俩~问我咋么办!? 马上用亮甲 O(∩_∩)O', type: 1, imgUrl: 'https://n.sinaimg.cn/sinacn17/530/w700h630/20181107/703a-hnprhzv9128002.jpg'},
-      ],
-      form: {
-        message: '',
-        file: '',
+      // chars: [
+      //   {
+      //     date: '2020-01-01 16:00:23',
+      //     // info: '得了灰指甲~一个传染力俩~问我咋么办!? 马上用亮甲 O(∩_∩)O',
+      //     type: 0,
+      //     imgUrl: 'http://img.ea3w.com/393/392461.jpg',
+      //     img: 'http://img.ea3w.com/393/392461.jpg'
+      //   },
+      // ],
+      info: { // 对方信息
+        // id: 3225,
+        // version: 1,
+        // createTime: "2020-02-08 19:35:37",
+        // createUserId: 13474,
+        // updateTime: null,
+        // updateUserId: null,
+        // isDel: 0,
+        // userId: 13474,
+        // doctorId: 3212,
+        // gender: "0",
+        // age: 20,
+        // diseaseDesc: "123",
+        // touchPatient: "2",
+        // attachment: null,
+        // userName: null,
+        // userImg: null,
+        // doctorName: "徐有福1",
+        // doctorImg: "http://jzgtraveloss.51dojoy.com/upload/20200205/88acaeb7cb9941ecb75cb2dfd448423e.jpg",
+        // doctorType: "0",
+        // hospitalName: "浙江大学医学院附属儿童医院",
+        // hospitalType: "0",
+        // departmentName: "皮肤科",
+        // goodAt: "发的是范德萨范德萨范德萨发的是范德萨范德萨范德萨发的是范德萨范德萨范德萨发的是范德萨范德萨范德萨发的是范德萨范德萨范德萨发的是范德萨范德萨范德萨发的是范德萨范德萨范德萨发的是范德萨范德萨范德萨发的是范德萨范德萨范德萨发的是范德萨范德萨范德萨发的是范德萨范德萨范德萨发的是范德萨范德萨范德萨发的是范德萨范德萨范德萨发的是范德萨范德萨范德萨发的是范德萨范德萨范德萨发的是范德萨范德萨范德萨发的是范德萨范德萨范德萨发的是范德萨范德萨范德萨发的是范德萨范德萨范德萨发的是范德萨范德萨范德萨发的是范德萨范德萨范德萨发的是范德萨范德萨范德萨发的是范德萨范德萨范德萨发的是范德萨范德萨范德萨发的是范德萨范德萨范德萨发的是范德萨范德萨范德萨发的是范德萨范德萨范德萨发的是范德萨范德萨范德萨发的是范德萨范德萨范德萨发的是范德萨范德萨范德萨发的是范德萨范德萨范德萨发的是范德萨范德萨范德萨发的是范德萨范德萨范德萨发的是范德萨范德萨范德萨发的是范德萨范德萨范德萨发的是范德萨范德萨范德萨发的是范德萨范德萨范德萨发的是范德萨范德萨范德萨发的是范德萨范德萨范德萨发的是范德萨范德萨范德萨发的是范德萨范德萨范德萨",
+        // doctorTypeText: "主任医师",
+        // hospitalTypeText: "三甲"
+      },
 
-        doctorId: '', //
-        limit: 10, //
-        page: 1 //
-      }
+      form: {
+        text: '',
+        count: 10 // 拉取历史条数
+      },
+      huanxin: { // 环信
+        // currentUserHeadImg // 当前 --- 用户头像
+        // currentUserHxAccount // 账号
+        // currentUserHxPwd // 密码
+        // currentUserId // id
+        // partyUserHxAccount // 对方 --- 环信账号
+        // partyUserId // 对方用户id
+        // partyUserHeadImg // 对方头像
+      },
+      historyBtnActivate: 0
     }
   },
-  computed: {},
+  computed: {
+    chars () {
+      return this.$store.getters.ChatRecord
+    }
+  },
   methods: {
     quit () {
       this.$router.go(-1)
     },
     init () {
-      this.$api.medical.inquiryRecordUserDoctor(this.form.doctorId, this.form).then(res => {
-        console.log(res)
-      })
+      this.info = this.$route.query
+      this.form.doctorId = this.$route.query.id // route query数据
+      this.historyBtnActivate = 0 // 按钮状态复位
+      this.$store.commit('ChatRecord', '') // 聊天记录清空(防止切换医生看到之前聊天记录)
+      this.async() // 异步串行
     },
 
-    init2 () {
-      var conn = {};
-      console.log(1111, WebIM, window.WebIM);
-      WebIM.config = config;
+    async: async function() {
+      await this.getHX() // 获取对方环信id 相关信息
+      this.login() // 登录
+      // await this.pullHistory()
+    },
 
-      // 初始化
-      conn = WebIM.conn = new WebIM.default.connection({
-        appKey: WebIM.config.appkey,
-        isHttpDNS: WebIM.config.isHttpDNS,
-        isMultiLoginSessions: WebIM.config.isMultiLoginSessions,
-        host: WebIM.config.Host,
-        https: WebIM.config.https,
-        url: WebIM.config.xmppURL,
-        apiUrl: WebIM.config.apiURL,
-        isAutoLogin: false,
-        heartBeatWait: WebIM.config.heartBeatWait,
-        autoReconnectNumMax: WebIM.config.autoReconnectNumMax,
-        autoReconnectInterval: WebIM.config.autoReconnectInterval,
-        isStropheLog: WebIM.config.isStropheLog,
-        delivery: WebIM.config.delivery
-      })
-
-
-      // 监听各种功能回调
-      conn.listen({
-        onOpened: function (message) {          //连接成功回调
-          var myDate = new Date().toLocaleString();
-          console.log("%c [opened] 连接已成功建立", "color: green");
-          console.log(myDate);
-          // rek();
-          // alert(myDate + "登陆成功")
-        },
-        onClosed: function (message) { // 连接关闭回调
-          console.log("onclose:" + message);
-          console.log(error);
-        },
-        onTextMessage: function (message) { // 收到文本消息
-          console.log('onTextMessage: ', message);
-          if (message.ext.conferenceId != undefined) {
-            var truthBeTold = window.confirm((message.from + "邀请您加入会议"));
-            if (truthBeTold) {
-              emedia.mgr.joinConference(message.ext.conferenceId, message.ext.password, "进入会议").then(function () {
-                console.log("********加入会议成功*******")
-              }).catch(function (error) {
-                console.log("加入会议失败")
-              })
-            }
-          }
-        },
-
-        onEmojiMessage: function (message) { // 收到表情消息
-          console.log('onEmojiMessage: ', message);
-        },
-        onPictureMessage: function (message) { // 收到图片消息
-          console.log('onPicMessage: ', message);
-        },
-        onCmdMessage: function (message) { // 收到命令消息
-          console.log('onCmdMessage: ', message);
-        },
-        onAudioMessage: function (message) { // 收到音频消息
-          console.log('onAudioMessage: ', message);
-        },
-        onLocationMessage: function (message) { // 收到位置消息
-          console.log('onLocMessage: ', message);
-        },
-        onFileMessage: function (message) { // 收到文件消息
-          console.log('onFileMessage: ', message);
-        },
-        recallMessage: function (message) { // 消息撤回
-          console.log('recallMessage', message);
-        },
-        onVideoMessage: function (message) { // 收到视频消息
-          console.log('onVideoMessage: ', message);
-          var node = document.getElementById('getVideo');
-          var option = {
-            url: message.url,
-            headers: {
-              'Accept': 'audio/mp4'
-            },
-            onFileDownloadComplete: function (response) {
-              var objectURL = WebIM.utils.parseDownloadResponse.call(conn, response);
-              node.src = objectURL;
-            },
-            onFileDownloadError: function () {
-              console.log('File down load error.')
-            }
-          };
-          WebIM.utils.download.call(conn, option);
-        },
-        onPresence: function (message) { // 处理“广播”或“发布-订阅”消息，如联系人订阅请求、处理群组、聊天室被踢解散等消息
-          var myDate = new Date().toLocaleString();
-          console.log('onPresence: ', myDate + JSON.stringify(message));
-          switch (message.type) {
-            case 'subscribe': // 对方请求添加好友
-              var truthBeTold = window.confirm((message.from + "申请添加您为好友:"));
-              if (truthBeTold) {
-                // 同意对方添加好友
-                conn.subscribed({
-                  to: message.from,
-                  message: "[resp:true]"
-                });
-                console.log("同意添加好友");
-              } else {
-                // 拒绝对方添加好友
-                conn.unsubscribed({
-                  to: message.from,
-                  message: "rejectAddFriend" // 拒绝添加好友回复信息
-                });
-                console.log("拒绝添加好友");
-              }
-              break;
-            case 'subscribed': // 对方同意添加好友，已方同意添加好友
-              break;
-            case 'unsubscribe': // 对方删除好友
-              break;
-            case 'unsubscribed': // 被拒绝添加好友，或被对方删除好友成功
-              break;
-            case 'memberJoinPublicGroupSuccess': // 成功加入聊天室
-              console.log('join chat room success' + myDate);
-              console.log(new Date().toLocaleString());
-              break;
-            case 'joinChatRoomFaild': // 加入聊天室失败
-              console.log('join chat room faild');
-              break;
-            case 'joinPublicGroupSuccess': // 意义待查
-              console.log('join public group success', message.from);
-              break;
-            case 'createGroupACK':
-              conn.createGroupAsync({
-                from: message.from,
-                success: function (option) {
-                  console.log('Create Group Succeed');
-                }
-              });
-              break;
-          }
-        },
-        onRoster: function (message) { //处理好友申请
-          console.log("onRoster", message);
-        },
-        onInviteMessage: function (message) { //处理群组邀请
-          console.log('Invite');
-        },
-        onOnline: function () { //本机网络连接成功
-          console.log("onOnline");
-        },
-        onOffline: function () { //本机网络掉线
-          console.log('offline');
-        },
-        onError: function (message) { // 失败回调
-          console.log('onError: ', message);
-        },
-        onBlacklistUpdate: function (list) { // 黑名单变动
-          // 查询黑名单，将好友拉黑，将好友从黑名单移除都会回调这个函数，list则是黑名单现有的所有好友信息
-          console.log(list);
-        },
-        onReceivedMessage: function (message) { // 收到消息送达服务器回执
-          console.log('onReceivedMessage: ', message);
-        },
-        onDeliveredMessage: function (message) { // 收到消息送达客户端回执
-          console.log('onDeliveredMessage：', message);
-        },
-        onReadMessage: function (message) { // 收到消息已读回执
-          console.log('onReadMessage: ', message);
-        },
-        onCreateGroup: function (message) { // 创建群组成功回执（需调用createGroupNew）
-          console.log('onCreateGroup: ', message);
-        },
-        onMutedMessage: function (message) { // 如果用户在A群组被禁言，在A群发消息会走这个回调并且消息不会传递给群其它成员
-          console.log('onMutedMessage: ', message);
+    // 获取对方环信
+    getHX () {
+      return new Promise((resolve, reject) => {
+        let req = {}
+        if (this.info.isDoctor) { // 医生
+          req.type = 1
+          req.partyUserId = this.info.userId
+        } else { // 用户
+          req.type = 0
+          req.partyUserId = this.info.doctorId
         }
-      });
+
+        this.$api.medical.userHx(req).then(res => {
+          console.log('获取环信', res)
+          if (res.code === 0) {
+            this.huanxin = res.bean
+            console.log(res.bean)
+            resolve()
+          }
+        })
+      })
     },
+
+
 
     submit (type) {
       switch (type) {
         case 1:
-          // console.log('表情', this.form.message)
           document.getElementById('file').click()
           break
         case 2:
-          console.log('消息', this.form.message)
+          this.text()
           break
       }
     },
-    beforeUpdata () {
-      let file = document.getElementById('file').files[0]
 
-      let arr = ['image/jpeg', 'image/png']
-      if (!arr.includes(file.type)) {
-        Toast('请上传 jpg或png 格式图片');
-        return
+
+    // 登录
+    login () {
+      let options = {
+        apiUrl: window.WebIM.config.apiURL,
+        user: this.huanxin.currentUserHxAccount,
+        pwd: this.huanxin.currentUserHxPwd,
+        appKey: window.WebIM.config.appkey
       }
-      console.log(file)
+      window.WebIM.conn.open(options)
+    },
+
+    //拉取历史消息
+    pullHistory () {
+      if (this.historyBtnActivate === 1) return
+      var options = {
+        queue: this.huanxin.partyUserHxAccount.toLowerCase(), // 对方id 如果包含大写字母 改成小写
+        isGroup: false,
+        count: this.form.count,
+        success: (e) => {
+          console.log('拉取历史消息成功（结果未作处理', e, e.length)
+          if (e.length === 0) {
+            this.historyBtnActivate = 1
+          }
+        },
+        fail: function(e){
+          console.log('失败', e)
+        }
+      }
+      window.WebIM.conn.fetchHistoryMessages(options)
+      this.form.count += 10
+    },
+
+    // 登出
+    logout () {
+      console.log('登出', window.WebIM.conn)
+      window.WebIM.conn.close()
+    },
+
+    // 获取时间戳
+    getDate () {
+      return new Date().toLocaleString()
+    },
+
+    // 文字信息
+    text () {
+      var id = window.WebIM.conn.getUniqueId() // 生成本地消息id
+      var msg = new WebIM.message('txt', id) // 创建文本消息
+      let date = this.getDate()
+      msg.set({
+        msg: this.form.text, // 消息内容
+        to: this.huanxin.partyUserHxAccount, // 接收消息对象（用户id）
+        roomType: false,
+        ext: { 'time': date }, // 接收消息对象
+        success: (id, serverMsgId) => { // 对成功的相关定义，sdk会将消息id登记到日志进行备份处理
+          console.log('发送成功', '对方头像',this.huanxin.partyUserHeadImg)
+          console.log('我的头像', this.huanxin.currentUserHeadImg)
+          this.$store.commit('ChatRecord',{
+            date: date,
+            info: this.form.text,
+            type: 1
+          })
+          this.form.text = ''
+        },
+        fail: function (e) { // 对失败的相关定义，sdk会将消息id登记到日志进行备份处理
+          console.log('发送失败')
+        }
+      })
+
+      window.WebIM.conn.send(msg.body)
+    },
+
+    // 图片
+    img () {
+      let input = document.getElementById('file').files[0] // 选择的图片
+
+      let arr = ['image/jpeg', 'image/png', 'image/gif', 'image/bmp']
+      if (!arr.includes(input.type)) {
+        Toast('只能使用 jpg、png、gif和bmp格式图片')
+        return false
+      }
+      var blob = new Blob([input], {type: input.type})
+      var url = window.URL.createObjectURL(blob)
+      var id = window.WebIM.conn.getUniqueId() // 生成本地消息id
+      let date = this.getDate()
+      var msg = new WebIM.message('img', id) // 创建图片消息
+      msg.set({
+        apiUrl: window.WebIM.config.apiURL,
+        file: {data: blob, url: url},
+        to: this.huanxin.partyUserHxAccount, // 接收消息对象
+        roomType: false,
+        ext: { 'time': date }, // 接收消息对象
+        onFileUploadError: function (error) {
+          console.log('错误', error)
+        },
+        onFileUploadComplete: function (data) {
+          console.log('完成')
+        },
+        success: (id) => {
+          console.log('成功')
+          this.$store.commit('ChatRecord',{
+            date: date,
+            type: 1,
+            img: url,
+          })
+        }
+      })
+      window.WebIM.conn.send(msg.body)
     }
   },
   created () {
-    this.form.doctorId = this.$route.query.id
     this.init()
-    // this.init2()
-    console.log(WebIM, 123456, config) // WebIM websdk
   },
   mounted () {},
   watch: {}
@@ -287,10 +286,20 @@ export default {
 @import './index.scss';
 
 .ctn{
+  &>.history{
+    padding: 15px;
+    text-align: center;
+    &>span{
+      padding: 5px 30px;
+      background-color: #bbb;
+      border-radius: 50px;
+      color: #fff;
+    }
+  }
+  
   &>.chats{
     position: relative;
     z-index: 1;
-    background-color: #eee;
     &>.chat{
       padding: 5px 10px;
       &>.date{
@@ -326,7 +335,6 @@ export default {
   }
   &>.b{
     height: 100px;
-    background-color: #eee;
   }
 }
 

@@ -171,7 +171,7 @@ export default {
     consultation (v) {
       this.$router.push({path: '/medical/home/condition', query: {id: v.id}}) // 填写病情
     },
-    // 充值搜索的默认参数
+    // 重置搜索的默认参数
     reset () {
       this.limit = 10
       this.page = 1
@@ -205,7 +205,7 @@ export default {
           this.loading = false;
 
           // 数据全部加载完成
-          if (res.bean.length < 10) this.finished = true;
+          if (res.bean.length < this.limit) this.finished = true;
         }
       })
     },

@@ -32,18 +32,20 @@
 
         <p class="date">{{v.createTime}}</p>
       </div>
-    <!-- </div> -->
     </van-list>
   </section>
 </template>
 
 <script>
+// import Vue from 'vue';
+// import { Toast } from 'vant';
+// Vue.use(Toast);
+
 export default {
   components: {},
   data () {
     return {
-      cards: [
-      ],
+      cards: [],
       option2: [],
       option3: [],
       speedProgress: 0,
@@ -76,7 +78,7 @@ export default {
               i.doctorTypeText = this.findAttrVal(i.doctorType, this.option3, 'value', 'text') // 职称
               i.hospitalTypeText = this.findAttrVal(i.hospitalType, this.option2, 'value', 'text') // 医院类型
             }
-            this.cards = res.bean
+            this.cards.push(...res.bean)
             this.isPageMax(res)
           }
         })
@@ -87,7 +89,7 @@ export default {
               i.doctorTypeText = this.findAttrVal(i.doctorType, this.option3, 'value', 'text') // 职称
               i.hospitalTypeText = this.findAttrVal(i.hospitalType, this.option2, 'value', 'text') // 医院类型
             }
-            this.cards = res.bean
+            this.cards.push(...res.bean)
             this.isPageMax(res)
           }
         })
@@ -97,47 +99,43 @@ export default {
     isPageMax (res) {
       // 加载状态结束
       this.loading = false;
-
       // 数据全部加载完成
-      if (res.bean.length < 10) this.finished = true;
+      if (res.bean.length < this.form.limit) this.finished = true;
     },
 
     init () {
-      this.speedProgress = 0
-      // 字典
-      let req_hospital_type = {
-        dictType: 'hospital_type' // 医院类型
+      if (this.speedProgress === 100) {
+        this.init2()
+        return
       }
-      this.$api.medical.sysDictSelectItemsByDictType(req_hospital_type).then(res => {
+
+      // 医院类型
+      this.$api.medical.sysDictSelectItemsByDictType({dictType:'hospital_type'}).then(res => {
         if (res.code === 0) {
           for (let i of res.bean) {
             i.text = i.dictItemName
             i.value = i.dictType
           }
-          this.option2.push(...res.bean)
+          this.option2 = res.bean
           this.speedProgress += 50
-          if (this.speedProgress === 100) {
-            this.init2()
-          }
+          if (this.speedProgress === 100) this.init2()
         }
       })
-      let req_doctor_type = {
-        dictType: 'doctor_type' // 医生职称
-      }
-      this.$api.medical.sysDictSelectItemsByDictType(req_doctor_type).then(res => {
+
+      // 医生职称
+      this.$api.medical.sysDictSelectItemsByDictType({dictType:'doctor_type'}).then(res => {
         if (res.code === 0) {
           for (let i of res.bean) {
             i.text = i.dictItemName
             i.value = i.dictType
           }
-          this.option3.push(...res.bean)
+          this.option3 = res.bean
           this.speedProgress += 50
-          if (this.speedProgress === 100) {
-            this.init2()
-          }
+          if (this.speedProgress === 100) this.init2()
         }
       })
     },
+
     findAttrVal (data, arr, attrName, targetAttrName) {
       for (let i of arr) {
         if (i[attrName] === data) {
@@ -148,13 +146,11 @@ export default {
 
     // 滚动容器触发触底事件
     onLoad () {
-      this.page++
+      this.form.page++
       this.init()
     },
   },
-  created () {
-    this.init()
-  },
+  created () {},
   mounted () {},
   watch: {}
 }

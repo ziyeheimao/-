@@ -17,8 +17,8 @@ export default {
   data () {
     return {
       form: {
-        tel: 13011118888,
-        smsVerifyCode: '4561'
+        tel: 15121211213,
+        smsVerifyCode: '123456'
       }
     }
   },
@@ -32,6 +32,7 @@ export default {
         if (res.code === 0) {
           setCookie("token", res.bean.token)
           console.log(getCookie('token'))
+          this.$router.push('/medical/home/index')
         }
       })
     }

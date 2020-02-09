@@ -4,12 +4,10 @@
 
 		<div class="top">
 			<div class="card left" @click="click(0)">
-				<!-- <van-icon name="comment" /> -->
 				<img src="../../../assets/img/indexCardLeft.png" alt="">
 				咨询记录
 			</div>
 			<div class="card right" @click="click(1)">
-				<!-- <van-icon name="like" /> -->
 				<img src="../../../assets/img/indexCardRight.png" alt="">
 				医生服务
 			</div>
@@ -39,13 +37,14 @@
 		</div>
 
 		<!-- 占位 -->
-		<div class="bottom" style="height: 70px;"></div>
+		<!-- <div class="bottom" style="height: 70px;"></div>
 
 		<van-tabbar v-model="tabbarActive">
 			<van-tabbar-item icon="wap-home">首 页</van-tabbar-item>
 			<van-tabbar-item icon="add-square">寻医问诊</van-tabbar-item>
 			<van-tabbar-item icon="manager">个人中心</van-tabbar-item>
-		</van-tabbar>
+		</van-tabbar> -->
+
 	</section>
 </template>
 
@@ -92,6 +91,7 @@ export default {
 		init () {
 			this.$api.medical.diseaseAll().then(res => { // 所有疾病
 				if (res.code === 0) this.disease = res.bean
+				console.log(this.disease)
 			})
 
 			this.$api.medical.departmentRecommend().then(res => { // 推荐科室

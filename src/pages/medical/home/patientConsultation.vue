@@ -6,18 +6,20 @@
       <div class="card" v-for="(v,k) in cards" :key="k" @click="see(v)">
         <div class="title">
           <van-icon name="clock" />
-          <span class="time">{{v.time}}</span>
+          <span class="time">{{v.createTime}}</span>
         </div>
 
         <van-divider></van-divider>
 
         <div>
-          <span class="name">{{v.name}}</span> &nbsp;
-          <span class="info">{{v.sex + ' / ' + v.age}} 岁</span>
+          <span class="name">{{v.userName}}</span> &nbsp;
+          <span class="info">{{v.gender ===  '0' ? '女' : '男'}}</span>
+          /
+          <span>{{v.age}} 岁</span>
         </div>
 
         <div>
-          <span>{{v.text}}</span>
+          <span>{{v.diseaseDesc}}</span>
         </div>
       </div>
     </van-list>
@@ -33,18 +35,10 @@ export default {
   data () {
     return {
       form: {
-        page: 1,
+        page: 0,
         limit: 10
       },
-      cards: [
-        {time: '2020年01月01日', sex:'男', age: 21,
-          name: '藏小草', 
-        text:'暗红色的暗红色的急啊卡速度加快暗红色的急啊卡速度加快急啊卡速度加快暗红色的急啊卡速度加快暗红色的暗红色的急啊卡速度加快暗红色的急啊卡速度加快急啊卡速度加快暗红色的急啊卡速度加快'}
-              ,{time: '2020年01月01日', sex:'男', age: 21,
-          name: '藏小草', 
-        text:'暗红色的暗红色的急啊卡速度加快暗红色的急啊卡速度加快急啊卡速度加快暗红色的急啊卡速度加快暗红色的暗红色的急啊卡速度加快暗红色的急啊卡速度加快急啊卡速度加快暗红色的急啊卡速度加快'}
-      
-      ],
+      cards: [],
 
       // 触底翻页容器
       loading: false,
@@ -58,28 +52,28 @@ export default {
 
     search () {
       this.$api.medical.inquiryRecordDoctorList(this.form).then(res => { // 患者咨询
-        // if (res.code === 0) this.cards = res.bean
-        console.log(this.cards)
+        if (res.code === 0) this.cards.push(...res.bean)
 
         // 加载状态结束
         this.loading = false;
 
         // 数据全部加载完成
-        if (res.bean.length < 10) this.finished = true;
+        if (res.bean.length < this.form.limit) this.finished = true;
       })
     },
     onLoad () {
-      this.page++
+      this.form.page++
       this.search()
     },
     see (v) {
-      console.log(v)
+      console.log('跳转之前', v)
+      v.isDoctor = true
+      v.doctorName = v.userName
+      this.$router.push({path: '/medical/home/chat', query: v})
     }
   },
   beforeCreate () {},
-  created () {
-    this.search()
-  },
+  created () {},
   beforeMount () {},
   mounted () {},
   beforeUpdate () {},

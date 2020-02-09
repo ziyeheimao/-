@@ -6,12 +6,14 @@
     <title>jzg</title>
     <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vant@2.2/lib/index.css"> -->
     <script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.15&key=45802ff2270bfb46ee1bfe0cfb00915b"></script>
-    <!-- <script src='./static/sdk/sdk/WebIMConfig.js'></script>
-    <script src='./static/sdk/sdk/webimSDK3.0.6.js'></script>
-    <script src='./static/sdk/sdk/EMedia_x1v1.js'></script> -->
+
+    <!-- 在 head 标签中添加 meta 标签，并设置 viewport-fit=cover 值 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+
+    <!-- 开启 safe-area-inset-bottom 属性 -->
+    <van-number-keyboard safe-area-inset-bottom />
   </head>
   <body>
     <div id="app"></div>
-    <!-- built files will be auto injected -->
   </body>
 </html>

@@ -19,8 +19,6 @@
               <span class="hospital">{{v.hospitalName}}</span>
               &nbsp;
               <span class="department">{{v.departmentName}}</span>
-              <!-- ·
-              <span class="hospitalTypeText">{{v.hospitalTypeText}}</span> -->
             </div>
           </div>
         </div>

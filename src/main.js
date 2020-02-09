@@ -13,7 +13,7 @@ import 'lib-flexible/flexible'
 import filters from './filters'
 import FastClick from 'fastclick'
 
-import websdk from "easemob-websdk" // 环信
+import WebIM from './utils/WebIM' // 环信
 
 import Vant from 'vant';
 import 'vant/lib/index.css';
@@ -36,6 +36,7 @@ new Vue({
   el: '#app',
   router,
   store,
+  WebIM,
   components: { App },
   template: '<App/>'
 })

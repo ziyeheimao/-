@@ -16,7 +16,8 @@ const store = new Vuex.Store({
     InnerSize: {
       width: 0,
       height: 0
-    }
+    },
+    ChatRecord: [] // 聊天记录
   },
 
   mutations: {
@@ -30,12 +31,25 @@ const store = new Vuex.Store({
     },
     InnerSize(state, value) {
       state.InnerSize = value;
+    },
+    ChatRecord(state, value) {
+      if (value) state.ChatRecord.push(value)
+      else state.ChatRecord = []
     }
   },
   getters: {
     InnerSize: (state) => {
       return state.InnerSize
+    },
+    ChatRecord: (state) => {
+      return state.ChatRecord
     }
+  },
+
+  actions: {
+    AChatRecord: (context, data) => {
+      context.commit('ChatRecord', data)
+    },
   },
 
   modules: {
