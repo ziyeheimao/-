@@ -12,7 +12,7 @@
     <van-tree-select v-show="isShow" :items="items" :active-id.sync="activeId"
       :main-active-index.sync="activeIndex" @click-item='clickItem'/>
 
-    <van-list class="cards" v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
+    <van-list class="cards" v-model="loading" :finished="finished" :finished-text="cards.length === 0 ? '尽情期待' : '没有更多了'" @load="onLoad">
       <div class="card" v-for="(v,k) in cards" :key="k" @click="doctorInfo(v)">
         <div class="info-box">
           <img :src="v.headImg" alt="">
@@ -47,12 +47,12 @@
         </div>
       </div>
     </van-list>
+
   </section>
 </template>
 
 <script>
 export default {
-  components: {},
   data () {
     return {
       page: 0,
@@ -79,20 +79,29 @@ export default {
       cards: [], // 医生卡片
       // 触底翻页容器
       loading: false,
-      finished: false
+      finished: false,
+
+      // 进度
+      speedProgress: 0
     }
   },
   computed: {},
   methods: {
     onLoad () {
       this.page++
-      this.search()
+      this.init()
     },
 
     quit () {
       this.$router.go(-1)
     },
     init () {
+      console.log(1)
+      if (this.speedProgress === 3) {
+        this.search()
+        return
+      }
+
       this.$api.medical.departmentAll().then(res => { // 全部科室
         if (res.code === 0) {
           for (let i of res.bean) {
@@ -103,6 +112,8 @@ export default {
 
           let id = this.$route.query.id
           if (id) { this.selectedDepartments(id, this.items) }
+          this.speedProgress++
+          if (this.speedProgress === 3) this.search()
         }
       })
 
@@ -117,6 +128,8 @@ export default {
             i.value = i.dictType
           }
           this.option2.push(...res.bean)
+          this.speedProgress++
+          if (this.speedProgress === 3) this.search()
         }
       })
 
@@ -130,6 +143,8 @@ export default {
             i.value = i.dictType
           }
           this.option3.push(...res.bean)
+          this.speedProgress++
+          if (this.speedProgress === 3) this.search()
         }
       })
     },
@@ -161,6 +176,9 @@ export default {
       this.option1[0].text = e.text
       this.option1[0].value = e.id
       this.$refs.dropdown.toggle();
+
+      this.reset() // 清空之前检索结果 并重置搜索参数
+      this.search()
     },
     open () { this.isShow = !this.isShow },
     close () { this.isShow = !this.isShow },
@@ -225,14 +243,11 @@ export default {
       return time.join(':')
     }
   },
-  created () {
-    this.init()
-  },
+  created () {},
   mounted () {},
   watch: {
     value1 () {
-      this.reset() // 清空之前检索结果 并重置搜索参数
-      this.search()
+
     },
     value2 () {
       this.reset() // 清空之前检索结果 并重置搜索参数

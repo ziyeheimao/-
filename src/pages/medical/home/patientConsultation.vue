@@ -23,13 +23,12 @@
         </div>
       </div>
     </van-list>
+
   </section>
 </template>
 
 <script>
-
 export default {
-  components: {},
   // props: [''],
   computed: {},
   data () {

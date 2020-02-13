@@ -8,7 +8,7 @@
  */
 
 // let baseUrl = 'http://192.168.204.98:9091';
-let baseUrl = 'http://118.31.170.128:9091/'; // 测试环境服务器ip
+let baseUrl = 'http://mapi.lexiangjk.com/'; // 测试环境服务器ip
 
 
 let routerMode = 'hash';
@@ -20,7 +20,7 @@ if (process.env.NODE_ENV == 'development') {
 
 }else if(process.env.NODE_ENV == 'production'){
 	// baseUrl = 'https://jzgapit.51dojoy.com'; // 生产环境服务器ip
-	baseUrl = 'http://118.31.170.128:9091/'; // 生产环境服务器ip
+	baseUrl = 'http://mapi.lexiangjk.com/'; // 生产环境服务器ip
     imgBaseUrl = '';
 }
 

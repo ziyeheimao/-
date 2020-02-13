@@ -56,6 +56,9 @@
       </div>
     </div>
 
+    <!-- 占位 -->
+    <div style="height: 55px;"></div>
+
     <div class="btn">
       <div class="box box1">
         <van-button size="normal" @click="click(0)">
@@ -253,8 +256,11 @@ export default {
     }
   }
   &>.btn{
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    left: 0;
     border-top: 1px solid #eee;
-    margin-bottom: 20px;
     display: flex;
     justify-content: space-between;
     &>.box{

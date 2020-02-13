@@ -27,7 +27,7 @@
 
         <div class="btn">
           <span @click="click(0, v)">在线咨询</span>
-          <span @click="click(1, v)">咨询记录</span>
+          <!-- <span @click="click(1, v)" class="disabled">咨询记录</span> -->
           <span @click="click(2, v)" class="disabled">预约挂号</span>
         </div>
       </div>
@@ -58,10 +58,10 @@ export default {
     click (type, v) {
       switch (type) {
         case 0:
-          this.$router.push({path: '/medical/home/advisoryRecord', query: {id: v.id}}) // 在线咨询
+          this.$router.push({path: '/medical/home/condition', query: {id: v.id}}) // 在线咨询
           break
         case 1:
-          this.$router.push({path: '/medical/home/chat', query: v})
+          // this.$router.push({path: '/medical/home/chat', query: v})
           break
         case 2:
           break
@@ -175,7 +175,7 @@ export default {
       & > .btn{
         color: $h_c;
         display: flex;
-        justify-content: space-between;
+        justify-content: space-around;
         padding: 10px 15px;
       }
       & > .btn > .disabled{

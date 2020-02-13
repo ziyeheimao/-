@@ -25,7 +25,7 @@
       </div>
     </div>
 
-    <div class="b"></div>
+    <div style="height: 55px;"></div>
     <div class="b2">
       <van-field v-model="form.text" @keyup.enter="text" label="回复">
         <!-- clearable type="textarea" rows="2" -->
@@ -333,24 +333,16 @@ export default {
       }
     }
   }
-  &>.b{
-    height: 100px;
-  }
 }
 
 .b2{
-  height: 90px;
-  position: absolute;
+  position: fixed;
+  left: 0;
+  width: 100%;
   bottom: 0;
   z-index: 2;
-  width: 100%;
-  background-color: #eee;
+  background-color: #fff;
 
-  .van-field{
-    background-color: #fff;
-    position: relative;
-    top: 10px;
-  }
   .icon{
     font-size: 30px;
   }

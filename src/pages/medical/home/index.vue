@@ -1,6 +1,6 @@
 <template>
 	<section class="ctn">
-		<van-nav-bar title="寻医问诊" left-arrow @click-left="quit"/>
+		<van-nav-bar title="寻医问诊"/>
 
 		<div class="top">
 			<div class="card left" @click="click(0)">
@@ -63,11 +63,7 @@ export default {
     }
   },
   methods: {
-		quit () {
-			console.log('返回')
-		},
 		toDepartmentSlect () {
-			// this.$router.push('/medical/home/department')
 			this.$router.push('/medical/home/doctor')
 		},
 		click (type) {

@@ -30,7 +30,11 @@
       <van-uploader v-model="form.fileList" multiple :max-count="3" :before-read="beforeRead"/>
     </div>
 
-    <van-button type="info" size="large" @click="submit" color="#4B7DC2">发送咨询</van-button>
+    <div style="height: 55px;"></div>
+
+    <div class="bottom">
+      <van-button type="info" size="large" @click="submit" color="#4B7DC2">发送咨询</van-button>
+    </div>
   </section>
 </template>
 
@@ -139,23 +143,23 @@ export default {
     },
 
     _file (req) {
-      return new Promise((resolve, reject) => {
-        // 处理文件
-        if (this.form.fileList.length > 0) {
-          let arr = []
-          for (let i of this.form.fileList) {this.updata(i.file, arr)}
+      // 处理文件
+      if (this.form.fileList.length > 0) {
+        let arr = []
+        for (let i of this.form.fileList) {this.updata(i.file, arr)}
 
-          this.interval = setInterval(() => {
-            if (arr.length === this.form.fileList.length) {
-              req.attachment = arr.toString()
-              clearInterval(this.interval)
-              this._submit(req)
-            }
-          }, 100)
-        } else {
-          this._submit(req)
-        }
-      })
+        let isSubmit = false
+        this.interval = setInterval(() => {
+          if (arr.length === this.form.fileList.length && isSubmit === false) {
+            isSubmit = true
+            req.attachment = arr.toString()
+            clearInterval(this.interval)
+            this._submit(req)
+          }
+        }, 500)
+      } else {
+        this._submit(req)
+      }
     },
     _submit (req) {
       this.$api.medical.inquiryRecordAdd(req).then(res => {
@@ -204,6 +208,13 @@ export default {
       justify-content: space-between;
       padding: 5px 20px;
     }
+  }
+  // bottom: ;
+  &>.bottom{
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    left: 0;
   }
 }
 </style>
