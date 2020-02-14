@@ -80,7 +80,9 @@ export default {
       },
 
       gender: [], // 性别
-      interval: null
+      interval: null,
+
+      arr: []
     }
   },
   computed: {},
@@ -145,14 +147,15 @@ export default {
     _file (req) {
       // 处理文件
       if (this.form.fileList.length > 0) {
-        let arr = []
-        for (let i of this.form.fileList) {this.updata(i.file, arr)}
+        this.arr = []
+        for (let i of this.form.fileList) {this.updata(i.file)}
 
         let isSubmit = false
         this.interval = setInterval(() => {
-          if (arr.length === this.form.fileList.length && isSubmit === false) {
+          if (this.arr.length === this.form.fileList.length && isSubmit === false) {
             isSubmit = true
-            req.attachment = arr.toString()
+            console.log(this.arr.length, this.form.fileList.length, isSubmit)
+            req.attachment = this.arr.toString()
             clearInterval(this.interval)
             this._submit(req)
           }
@@ -171,12 +174,12 @@ export default {
       })
     },
 
-    updata (file, arr) {
+    updata (file) {
       let data = new FormData()
       data.append('file', file)
       this.$api.medical.sysOssUpload(data).then(res => {
         if (res.code === 0) {
-          arr.push(res.bean)
+          this.arr.push(res.bean)
         }
       })
     },
