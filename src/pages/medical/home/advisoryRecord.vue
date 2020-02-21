@@ -2,7 +2,7 @@
   <section class="ctn">
     <van-nav-bar title="咨询记录" left-arrow @click-left="quit"/>
 
-    <van-list class="cards" v-model="loading" :finished="finished" :finished-text="cards.length === 0 ? '尽情期待' : '没有更多了'" @load="onLoad">
+    <van-list class="cards" v-model="loading" :finished="finished" :finished-text="cards.length === 0 ? '敬请期待' : '没有更多了'" @load="onLoad">
 
       <div class="card" v-for="(v,k) in cards" :key="k" @click="char(v)">
         <div class="info-box">

@@ -28,6 +28,7 @@
 </template>
 
 <script>
+import {goToCenter} from '@/utils/ios_android_fun'
 export default {
   // props: [''],
   computed: {},
@@ -46,7 +47,8 @@ export default {
   },
   methods: {
     quit () {
-      this.$router.go(-1)
+      // this.$router.go(-1)
+      goToCenter()
     },
 
     search () {
@@ -72,7 +74,9 @@ export default {
     }
   },
   beforeCreate () {},
-  created () {},
+  created () {
+    console.log(goToCenter)
+  },
   beforeMount () {},
   mounted () {},
   beforeUpdate () {},

@@ -12,7 +12,7 @@
     <van-tree-select v-show="isShow" :items="items" :active-id.sync="activeId"
       :main-active-index.sync="activeIndex" @click-item='clickItem'/>
 
-    <van-list class="cards" v-model="loading" :finished="finished" :finished-text="cards.length === 0 ? '尽情期待' : '没有更多了'" @load="onLoad">
+    <van-list class="cards" v-model="loading" :finished="finished" :finished-text="cards.length === 0 ? '敬请期待' : '没有更多了'" @load="onLoad">
       <div class="card" v-for="(v,k) in cards" :key="k" @click="doctorInfo(v)">
         <div class="info-box">
           <img :src="v.headImg" alt="">
@@ -96,57 +96,70 @@ export default {
       this.$router.go(-1)
     },
     init () {
-      console.log(1)
       if (this.speedProgress === 3) {
         this.search()
         return
       }
+      this.async()
+    },
 
-      this.$api.medical.departmentAll().then(res => { // 全部科室
-        if (res.code === 0) {
-          for (let i of res.bean) {
-            i.children = i.child
+    _departmentAll () { // 全部科室
+      return new Promise((resolve, reject) => {
+        this.$api.medical.departmentAll().then(res => {
+          if (res.code === 0) {
+            for (let i of res.bean) {
+              i.children = i.child
+            }
+            this.dg(res.bean)
+            this.items = [{ text: '全部科室', name: '全部科室', id: -1, value: -1, children: [{text: '全部科室', name: '全部科室', id: -1, value: -1}] }, ...res.bean]
+
+            let id = this.$route.query.id
+            if (id) { this.selectedDepartments(id, this.items) }
+            this.speedProgress++
+            // if (this.speedProgress === 3) this.search()
+            resolve()
           }
-          this.dg(res.bean)
-          this.items = [{ text: '全部科室', name: '全部科室', id: -1, value: -1, children: [{text: '全部科室', name: '全部科室', id: -1, value: -1}] }, ...res.bean]
-
-          let id = this.$route.query.id
-          if (id) { this.selectedDepartments(id, this.items) }
-          this.speedProgress++
-          if (this.speedProgress === 3) this.search()
-        }
+        })
       })
-
-      // 字典
-      let req_hospital_type = {
-        dictType: 'hospital_type' // 医院类型
-      }
-      this.$api.medical.sysDictSelectItemsByDictType(req_hospital_type).then(res => {
-        if (res.code === 0) {
-          for (let i of res.bean) {
-            i.text = i.dictItemName
-            i.value = i.dictType
+    },
+    _doctor_type () { // 职称
+      return new Promise((resolve, reject) => {
+        this.$api.medical.sysDictSelectItemsByDictType({dictType: 'doctor_type'}).then(res => {
+          if (res.code === 0) {
+            for (let i of res.bean) {
+              i.text = i.dictItemName
+              i.value = i.dictType
+            }
+            this.option3.push(...res.bean)
+            this.speedProgress++
+            // if (this.speedProgress === 3) this.search()
+            resolve()
           }
-          this.option2.push(...res.bean)
-          this.speedProgress++
-          if (this.speedProgress === 3) this.search()
-        }
+        })
       })
-
-      let req_doctor_type = {
-        dictType: 'doctor_type' // 医生职称
-      }
-      this.$api.medical.sysDictSelectItemsByDictType(req_doctor_type).then(res => {
-        if (res.code === 0) {
-          for (let i of res.bean) {
-            i.text = i.dictItemName
-            i.value = i.dictType
+    },
+    _hospital_type () { // 医院类型
+      return new Promise((resolve, reject) => {
+        this.$api.medical.sysDictSelectItemsByDictType({dictType: 'hospital_type'}).then(res => {
+          if (res.code === 0) {
+            for (let i of res.bean) {
+              i.text = i.dictItemName
+              i.value = i.dictType
+            }
+            this.option2.push(...res.bean)
+            this.speedProgress++
+            // if (this.speedProgress === 3) this.search()
+            resolve()
           }
-          this.option3.push(...res.bean)
-          this.speedProgress++
-          if (this.speedProgress === 3) this.search()
-        }
+        })
       })
+    },
+    // 异步串行
+    async: async function () {
+      await this._hospital_type() // 医院
+      await this._doctor_type() // 职称
+      await this._departmentAll() // 科室
+      await this.search()
     },
 
     // 初始化已选科室(如果有)
@@ -156,6 +169,7 @@ export default {
           this.value1 = i.id
           this.option1[0].text = i.text
           this.option1[0].value = i.id
+          console.log(this.option1)
           return
         }
         if (i.child) {
@@ -205,26 +219,29 @@ export default {
       }
     },
     search () { // 搜索医生
-      let req = { page: this.page, limit: this.limit, }
-      if (this.value1 !== -1) req.departmentId = this.value1 // 科室id
-      if (this.value2 !== -1) req.hospitalType = this.value2 + '' // 医院类型
-      if (this.value3 !== -1) req.doctorType = this.value3 + '' // 从业职称
+      return new Promise((resolve, reject) => {
+        let req = { page: this.page, limit: this.limit, }
+        if (this.value1 !== -1) req.departmentId = this.value1 // 科室id
+        if (this.value2 !== -1) req.hospitalType = this.value2 + '' // 医院类型
+        if (this.value3 !== -1) req.doctorType = this.value3 + '' // 从业职称
 
-      this.$api.medical.doctorList(req).then(res => { // 搜索医生
-        if (res.code === 0) {
-          for (let i of res.bean) {
-            i.doctorTypeText = this.findAttrVal(i.doctorType, this.option3, 'value', 'text') // 职称
-            i.hospitalTypeText = this.findAttrVal(i.hospitalType, this.option2, 'value', 'text') // 医院类型
-            i.avReplyTime = this.formatTime(i.avReplyTime) // 回复时间
-            this.cards.push(i) // 追加内容
+        this.$api.medical.doctorList(req).then(res => { // 搜索医生
+          if (res.code === 0) {
+            for (let i of res.bean) {
+              i.doctorTypeText = this.findAttrVal(i.doctorType, this.option3, 'value', 'text') // 职称
+              i.hospitalTypeText = this.findAttrVal(i.hospitalType, this.option2, 'value', 'text') // 医院类型
+              i.avReplyTime = this.formatTime(i.avReplyTime) // 回复时间
+              this.cards.push(i) // 追加内容
+            }
+
+            // 加载状态结束
+            this.loading = false;
+
+            // 数据全部加载完成
+            if (res.bean.length < this.limit) this.finished = true;
+            resolve()
           }
-
-          // 加载状态结束
-          this.loading = false;
-
-          // 数据全部加载完成
-          if (res.bean.length < this.limit) this.finished = true;
-        }
+        })
       })
     },
 

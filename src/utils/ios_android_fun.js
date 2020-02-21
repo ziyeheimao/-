@@ -45,13 +45,13 @@ const setToken = (callBack) => { // 获取token
     //     }
     // };
 }
-// 导航
-const sdk = (position) => {
+
+const goToCenter = () => {
     if (isiOS) {
-        iOSFun(2, "", position);
+        iOSFun(2);
     }
     if (isAndroid) {
-        androidFun(2, "", position);
+        androidFun(2);
     }
 }
-export { gotoNativeLogin, setToken, sdk }
+export { gotoNativeLogin, setToken, goToCenter }
